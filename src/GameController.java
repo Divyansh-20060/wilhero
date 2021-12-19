@@ -2,12 +2,9 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
@@ -15,9 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 
-import javax.imageio.ImageIO;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,6 +58,7 @@ class Hero extends gameobjcts{
 
 class Game implements Serializable{
     public String st = "o";
+    public int[] isl = {0,0};
     public Hero hero;
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public Game(){
@@ -72,19 +68,22 @@ class Game implements Serializable{
     }
 
     public void save(Game G1) throws IOException {
-        FileOutputStream fileout = new FileOutputStream("game1.ser");
+        isl[0] = 200;
+        isl[1] = 200;
+        String st = "GAME34.ser";
+        FileOutputStream fileout = new FileOutputStream(st);
         ObjectOutputStream out = new ObjectOutputStream(fileout);
-        out.writeObject(G1);
+        out.writeObject(G1.isl);
         out.close();
         fileout.close();
         System.out.println("Saved!");
     }
 
-    public Game load() throws IOException, ClassNotFoundException {
-        Game g1 = null;
-        FileInputStream filein = new FileInputStream("game1.ser");
+    public int[] load() throws IOException, ClassNotFoundException {
+        int g1[] = null;
+        FileInputStream filein = new FileInputStream("GAME34.ser");
         ObjectInputStream in = new ObjectInputStream(filein);
-        g1 = (Game) in.readObject();
+        g1 = (int[]) in.readObject();
         in.close();
         filein.close();
         System.out.println("loaded");
@@ -196,8 +195,10 @@ public class GameController implements Initializable{
     public void onLoadB() throws IOException, ClassNotFoundException {
         //anchorPane.getChildren().removeAll(G1.hero.Node,G1.Islands.get(0).Node);
         //System.out.println(G1.st);
-        G1 = G1.load();
-        anchorPane.getChildren().addAll(G1.hero.Node,G1.Islands.get(0).Node);
+        G1.isl = G1.load();
+        G1.Islands.get(0).Node.setLayoutX(G1.isl[0]);
+        G1.Islands.get(0).Node.setLayoutY(G1.isl[1]);
+        //anchorPane.getChildren().addAll(G1.hero.Node,G1.Islands.get(0).Node);
     }
 
     @Override
