@@ -16,55 +16,61 @@ import javafx.fxml.Initializable;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
-class Img extends ImageView implements Serializable{
-    //private transient Image image ;
-    public Img (String st){
-        super(st);
-    }
-//
-//    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
-//        s.defaultReadObject();
-//        image  = SwingFXUtils.toFXImage(ImageIO.read(s), null);
-//    }
-//
-//    private void writeObject(ObjectOutputStream s) throws IOException {
-//        s.defaultWriteObject();
-//        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
-//    }
-}
+
 
 class gameobjcts implements Serializable {
-    public Img Node;
+    public ImageView Node;
     //private void Collision(){}
 }
 
 class islands extends gameobjcts {
-    public islands(){
-        Node = new Img("island.png");
-        Node.setLayoutX(-20);
-        Node.setLayoutY(330);
+    public islands(double x, double y){
+        Node = new ImageView("island.png");
+        Node.setLayoutX(x);
+        Node.setLayoutY(y);
     }
 }
 
 class Hero extends gameobjcts{
     public Hero(){
-        Node = new Img("hero.png");
+        Node = new ImageView("hero.png");
         Node.setLayoutX(93);
         Node.setLayoutY(238);
     }
 }
 
 class Game implements Serializable{
-    public String st = "o";
     public int[] isl = {0,0};
     public Hero hero;
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public Game(){
         hero = new Hero();
-        islands i1 = new islands();
+        islands i1 = new islands(40,300);
         Islands.add(i1);
+        for (int i = 0; i<3;i++){
+        IslandSpawner();
+        }
+    }
+
+    private void IslandSpawner(){
+        double New_Y[] = {-50,0,50};
+        Random rand = new Random();
+        int y = rand.nextInt(3);
+        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 300),
+                (Islands.get(Islands.size()-1).Node.getLayoutY() + New_Y[y]));
+        if (i.Node.getLayoutY() > 450){
+            i.Node.setLayoutY(450);
+        }
+
+        if (i.Node.getLayoutY() < 100){
+            i.Node.setLayoutY(100);
+        }
+        Islands.add(i);
+
+        //return i;
     }
 
     public void save(Game G1) throws IOException {
@@ -103,22 +109,15 @@ public class GameController implements Initializable{
     @FXML
     private Button Stop;
 
-    @FXML
-    private Circle cir;
-
-    //@FXML
-    //private ImageView hero;
 
     @FXML
     private Button dash;
 
     public Game G1 = new Game();
 
-    //private ArrayList<islands> Islands = new ArrayList<islands>();
-
     public TranslateTransition transition = new TranslateTransition();
 
-    Timeline T1 = new Timeline(new KeyFrame(Duration.millis(6), new EventHandler<ActionEvent>() { //e->{}
+    Timeline T1 = new Timeline(new KeyFrame(Duration.millis(6), new EventHandler<ActionEvent>() {
         double DY = 2.0;
         @Override
         public void handle(ActionEvent event) {
@@ -193,19 +192,24 @@ public class GameController implements Initializable{
     }
 
     public void onLoadB() throws IOException, ClassNotFoundException {
-        //anchorPane.getChildren().removeAll(G1.hero.Node,G1.Islands.get(0).Node);
-        //System.out.println(G1.st);
+
         G1.isl = G1.load();
         G1.Islands.get(0).Node.setLayoutX(G1.isl[0]);
         G1.Islands.get(0).Node.setLayoutY(G1.isl[1]);
-        //anchorPane.getChildren().addAll(G1.hero.Node,G1.Islands.get(0).Node);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        anchorPane.getChildren().addAll(G1.hero.Node,G1.Islands.get(0).Node);
+        anchorPane.getChildren().addAll(G1.hero.Node);
+
+        for (int i = 0; i<G1.Islands.size();i++){
+            anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
+        }
     }
 }
 
 
-//text2
+//min y = 100
+//max y = 450
+//shift x = 300
+//shift y = 50
