@@ -37,8 +37,8 @@ class islands extends gameobjcts {
 class Hero extends gameobjcts{
     public Hero(){
         Node = new ImageView("hero.png");
-        Node.setLayoutX(93);
-        Node.setLayoutY(238);
+        Node.setLayoutX(60);
+        Node.setLayoutY(200);
     }
 }
 
