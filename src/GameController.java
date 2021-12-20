@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
@@ -99,6 +100,9 @@ class Game implements Serializable{
 
 public class GameController implements Initializable{
     @FXML
+    private Text WILLHERO;
+	
+	@FXML
     private AnchorPane anchorPane;
     @FXML
     private Button save;
@@ -112,7 +116,9 @@ public class GameController implements Initializable{
 
     @FXML
     private Button dash;
-
+    
+    private boolean hasStarted;
+    
     public Game G1 = new Game();
 
     public TranslateTransition transition = new TranslateTransition();
@@ -171,6 +177,14 @@ public class GameController implements Initializable{
     }
 
     public void onStartButtonClick() {
+    	if(hasStarted == false) {
+    		hasStarted = true;
+	    	TranslateTransition transition = new TranslateTransition();
+	    	transition.setNode(WILLHERO);
+	    	transition.setDuration(Duration.millis(250));
+	    	transition.setByY(-230);
+	    	transition.play();
+    	}
         DT = true;
         T1.setCycleCount(Animation.INDEFINITE);
         T1.play();
