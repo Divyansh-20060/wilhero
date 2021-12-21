@@ -187,6 +187,14 @@ public class GameController implements Initializable{
     }
 
     public void jump(Node pp){
+	ScaleTransition scale = new ScaleTransition();
+    	scale.setNode(pp);
+    	scale.setDuration(Duration.millis(80));
+    	scale.setCycleCount(2);
+    	scale.setInterpolator(Interpolator.LINEAR);
+    	scale.setToY(0.4);
+    	scale.setAutoReverse(true);
+    	scale.play();
         TranslateTransition transition = new TranslateTransition();
         transition.setDuration(Duration.seconds(0.4));
         transition.setAutoReverse(false);
