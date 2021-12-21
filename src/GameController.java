@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
+
 import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,7 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
-
+import javafx.animation.ScaleTransition;
+import javafx.animation.Interpolator;
 
 
 class gameobjcts{
@@ -69,16 +70,12 @@ class Game implements Serializable{
         }
     }
 
-    private void Orc_Spwaner(){
-
-    }
-
     private void IslandSpawner(){
         double New_Y[] = {-50,0,50};
         Random rand = new Random();
         int y = rand.nextInt(3);
         boolean OV = rand.nextBoolean();
-        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 300),
+        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 330),
                 (Islands.get(Islands.size()-1).Node.getLayoutY() + New_Y[y]));
         if (i.Node.getLayoutY() > 450){
             i.Node.setLayoutY(450);
@@ -145,44 +142,40 @@ public class GameController implements Initializable{
 
     public TranslateTransition transition = new TranslateTransition();
 
-    Timeline T1 = new Timeline(new KeyFrame(Duration.millis(6), new EventHandler<ActionEvent>() {
+    private boolean DT = false;
+
+    Timeline T1 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
         double DY = 2.0;
         @Override
         public void handle(ActionEvent event) {
             G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 2);
-            if(G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(0).Node.getBoundsInParent())){
+            for (int i = 0;i < G1.Islands.size(); i++){
+                if(G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
                 T1.stop();
-                transition.stop();
+                Dash.stop();
                 jump(G1.hero.Node);
+                }
 
             }
         }
     }
     ));
+    Timeline Dash = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
+        double DX = 2.0;
+        @Override
+        public void handle(ActionEvent event) {
+            G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2);
+        }
+    }));
 
-
-    private boolean DT= false;
-    public int X=14;
 
     public GameController() throws IOException {
     }
 
     public void Dash(){
-//        TranslateTransition transition = new TranslateTransition();
-//        transition.setDuration(Duration.seconds(0.5));
-//        transition.setAutoReverse(true);
-//        transition.setCycleCount(1);
-//        transition.setToX(50);
-//        X = X + 50;
-//        transition.setNode(jojo);
-//        transition.play();
 
-        transition.setNode(G1.hero.Node);
-        transition.setDuration(Duration.millis(200));
-        transition.setCycleCount(0);
-        transition.setByX(50);
-        transition.setAutoReverse(false);
-        transition.play();
+        Dash.setCycleCount(60);
+        Dash.play();
 
     }
 
@@ -196,18 +189,18 @@ public class GameController implements Initializable{
     	scale.setAutoReverse(true);
     	scale.play();
         TranslateTransition transition = new TranslateTransition();
-        transition.setDuration(Duration.seconds(0.4));
+        transition.setDuration(Duration.seconds(0.5));
         transition.setAutoReverse(false);
         transition.setCycleCount(0);
         //while(System.get)
-        transition.setByY(-200);
+        transition.setByY(-180);
         transition.setNode(pp);
         transition.play();
         transition.setOnFinished(e->T1.play());
     }
 
     public void onStartButtonClick() {
-    	if(hasStarted == false) {
+    	if(!hasStarted) {
     		hasStarted = true;
 	    	TranslateTransition transition = new TranslateTransition();
 	    	transition.setNode(WILLHERO);
