@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 
 
-class gameobjcts implements Serializable {
+class gameobjcts{
     public ImageView Node;
     //private void Collision(){}
 }
@@ -30,6 +30,18 @@ class gameobjcts implements Serializable {
 class islands extends gameobjcts {
     public islands(double x, double y){
         Node = new ImageView("island.png");
+        Node.setLayoutX(x);
+        Node.setLayoutY(y);
+    }
+}
+
+class Orc extends gameobjcts{
+
+    public Orc (double x, double y){
+        String orcT[] = {"Orc1.png","RedOrc1.png"};
+        Random rand = new Random();
+        int OT = rand.nextInt(2);
+        Node = new ImageView(orcT[OT]);
         Node.setLayoutX(x);
         Node.setLayoutY(y);
     }
@@ -47,6 +59,7 @@ class Game implements Serializable{
     public int[] isl = {0,0};
     public Hero hero;
     public ArrayList<islands> Islands = new ArrayList<islands>();
+    public ArrayList<Orc> Orcs = new ArrayList<Orc>();
     public Game(){
         hero = new Hero();
         islands i1 = new islands(40,300);
@@ -56,10 +69,15 @@ class Game implements Serializable{
         }
     }
 
+    private void Orc_Spwaner(){
+
+    }
+
     private void IslandSpawner(){
         double New_Y[] = {-50,0,50};
         Random rand = new Random();
         int y = rand.nextInt(3);
+        boolean OV = rand.nextBoolean();
         islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 300),
                 (Islands.get(Islands.size()-1).Node.getLayoutY() + New_Y[y]));
         if (i.Node.getLayoutY() > 450){
@@ -70,6 +88,10 @@ class Game implements Serializable{
             i.Node.setLayoutY(100);
         }
         Islands.add(i);
+        if (OV){
+            Orc orc = new Orc(i.Node.getLayoutX() + 90,i.Node.getLayoutY() - 60);
+            Orcs.add(orc);
+        }
 
         //return i;
     }
@@ -218,6 +240,10 @@ public class GameController implements Initializable{
 
         for (int i = 0; i<G1.Islands.size();i++){
             anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
+        }
+
+        for (int i = 0; i<G1.Orcs.size();i++){
+            anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
         }
     }
 }
