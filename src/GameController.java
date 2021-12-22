@@ -248,7 +248,7 @@ public class GameController implements Initializable{
 //    	scale.play();
     	
     	jump.setCycleCount(56);
-    	rest.setCycleCount(30);
+    	rest.setCycleCount(15);
     	rest.play();
     	rest.setOnFinished(event -> jump.play());
     	jump.setOnFinished(e -> T1.play());
