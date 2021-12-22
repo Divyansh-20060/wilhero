@@ -143,6 +143,32 @@ public class GameController implements Initializable{
     public TranslateTransition transition = new TranslateTransition();
 
     private boolean DT = false;
+    
+    Timeline T2 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
+        double DY = 2.0;
+        @Override
+        public void handle(ActionEvent event) {
+        	for (int j = 0; j < G1.Orcs.size(); j++) {
+        		G1.Orcs.get(j).Node.setLayoutY(G1.Orcs.get(j).Node.getLayoutY() + 2);
+        	}
+        	
+            for (int i = 0;i < G1.Islands.size(); i++){
+            	for (int j = 0 ;j < G1.Orcs.size(); j++) {
+	                if(G1.Orcs.get(j).Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
+	                T2.stop();
+	                
+	
+	                
+	                jump_orc();
+	                }
+            	}
+
+            }
+        }
+    }
+    ));
+    
+    
 
     Timeline T1 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
         double DY = 2.0;
@@ -162,6 +188,18 @@ public class GameController implements Initializable{
         }
     }
     ));
+    
+    Timeline jump_orc = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
+        double DX = 2.0;
+        @Override
+        
+        public void handle(ActionEvent event) {
+        	for (int i = 0; i < G1.Orcs.size(); i++) {
+        		G1.Orcs.get(i).Node.setLayoutY(G1.Orcs.get(i).Node.getLayoutY() - 3);
+        	}
+
+        }
+    }));
     
     Timeline jump = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
         double DX = 2.0;
@@ -192,6 +230,16 @@ public class GameController implements Initializable{
         	
         }
     }));
+    
+    Timeline rest_orc = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+        
+        @Override
+        public void handle(ActionEvent event) {
+        		
+        	
+        }
+    }));
+    
     Timeline rest = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
         
         @Override
@@ -236,7 +284,13 @@ public class GameController implements Initializable{
         
 
     }
-
+    public void jump_orc() {
+    	jump_orc.setCycleCount(56);
+    	rest_orc.setCycleCount(70);
+    	rest_orc.play();
+    	rest_orc.setOnFinished(event -> jump_orc.play());
+    	jump_orc.setOnFinished(event -> T2.play());
+    }
     public void jump(Node pp){
 //	ScaleTransition scale = new ScaleTransition();
 //    	scale.setNode(pp);
@@ -273,7 +327,10 @@ public class GameController implements Initializable{
 	    	transition.setByY(-230);
 	    	transition.play();
     	}
+    	
         DT = true;
+        T2.setCycleCount(Animation.INDEFINITE);
+        T2.play();
         T1.setCycleCount(Animation.INDEFINITE);
         T1.play();
         //anime(hero);
