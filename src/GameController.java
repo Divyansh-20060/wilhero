@@ -153,6 +153,8 @@ public class GameController implements Initializable{
                 if(G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
                 T1.stop();
                 Dash.stop();
+
+                
                 jump(G1.hero.Node);
                 }
 
@@ -160,11 +162,57 @@ public class GameController implements Initializable{
         }
     }
     ));
-    Timeline Dash = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
+    
+    Timeline jump = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
         double DX = 2.0;
         @Override
+        
         public void handle(ActionEvent event) {
-            G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2);
+        	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 3);
+
+        }
+    }));
+    
+    Timeline DashBack = new Timeline(new KeyFrame(Duration.millis(1.5), new EventHandler<ActionEvent>() {
+        double DX = 2.0;
+        @Override
+        
+        public void handle(ActionEvent event) {
+        	
+        	if (G1.hero.Node.getLayoutX() >= 60) {
+        		
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 0.5 );
+        		for (int i = 0; i < G1.Islands.size(); i++) {
+        			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -0.5 );
+        		}
+        		for (int i = 0; i < G1.Orcs.size(); i++) {
+        			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -0.5 );
+        		}
+        	} 	
+        	
+        }
+    }));
+    Timeline rest = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+        
+        @Override
+        public void handle(ActionEvent event) {
+        		
+        	
+        }
+    }));
+    
+   
+    Timeline Dash = new Timeline(new KeyFrame(Duration.millis(1.3), new EventHandler<ActionEvent>() {
+        double DX = 2.0;
+        @Override
+        
+        public void handle(ActionEvent event) {
+        	
+        	if (G1.hero.Node.getLayoutX() <= 250 ) {
+        		
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2.5); 
+        	}	
+        	
         }
     }));
 
@@ -173,30 +221,47 @@ public class GameController implements Initializable{
     }
 
     public void Dash(){
-
-        Dash.setCycleCount(60);
+    	jump.stop();
+    	T1.stop();
+        Dash.setCycleCount(70);
+        DashBack.setCycleCount(Animation.INDEFINITE);
+        DashBack.play();
+       
+        
         Dash.play();
+        
+        Dash.setOnFinished(event -> T1.play());
+        
+
+        
 
     }
 
     public void jump(Node pp){
-	ScaleTransition scale = new ScaleTransition();
-    	scale.setNode(pp);
-    	scale.setDuration(Duration.millis(80));
-    	scale.setCycleCount(2);
-    	scale.setInterpolator(Interpolator.LINEAR);
-    	scale.setToY(0.4);
-    	scale.setAutoReverse(true);
-    	scale.play();
-        TranslateTransition transition = new TranslateTransition();
-        transition.setDuration(Duration.seconds(0.5));
-        transition.setAutoReverse(false);
-        transition.setCycleCount(0);
-        //while(System.get)
-        transition.setByY(-180);
-        transition.setNode(pp);
-        transition.play();
-        transition.setOnFinished(e->T1.play());
+//	ScaleTransition scale = new ScaleTransition();
+//    	scale.setNode(pp);
+//    	scale.setDuration(Duration.millis(80));
+//    	scale.setCycleCount(0);
+//    	scale.setInterpolator(Interpolator.LINEAR);
+//    	scale.setToY(1);
+////    	scale.setAutoReverse(true);
+//    	scale.play();
+    	
+    	jump.setCycleCount(56);
+    	rest.setCycleCount(30);
+    	rest.play();
+    	rest.setOnFinished(event -> jump.play());
+    	jump.setOnFinished(e -> T1.play());
+//        TranslateTransition transition = new TranslateTransition();
+//        transition.setDuration(Duration.seconds(0.5));
+//        transition.setAutoReverse(false);
+//        transition.setCycleCount(0);
+//        //while(System.get)
+//        transition.setByY(-180);
+//        transition.setNode(pp);
+//        transition.play();
+//        transition.setOnFinished(e->T1.play());
+    	
     }
 
     public void onStartButtonClick() {

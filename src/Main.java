@@ -11,6 +11,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("will-hero.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("will hero");
+        
         stage.setScene(scene);
         stage.show();
         //hello
