@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+
 import javafx.animation.ScaleTransition;
 import javafx.animation.Interpolator;
 
@@ -75,7 +77,7 @@ class Game implements Serializable{
         Random rand = new Random();
         int y = rand.nextInt(3);
         boolean OV = rand.nextBoolean();
-        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 330),
+        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 450),
                 (Islands.get(Islands.size()-1).Node.getLayoutY() + New_Y[y]));
         if (i.Node.getLayoutY() > 450){
             i.Node.setLayoutY(450);
@@ -174,7 +176,9 @@ public class GameController implements Initializable{
         double DY = 2.0;
         @Override
         public void handle(ActionEvent event) {
-            G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 2);
+        	if (true) {
+        		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 2);
+        	}
             for (int i = 0;i < G1.Islands.size(); i++){
                 if(G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
                 T1.stop();
@@ -195,6 +199,7 @@ public class GameController implements Initializable{
         
         public void handle(ActionEvent event) {
         	for (int i = 0; i < G1.Orcs.size(); i++) {
+        		
         		G1.Orcs.get(i).Node.setLayoutY(G1.Orcs.get(i).Node.getLayoutY() - 3);
         	}
 
@@ -206,8 +211,9 @@ public class GameController implements Initializable{
         @Override
         
         public void handle(ActionEvent event) {
+        	if (T1.getStatus() == Animation.Status.STOPPED) {
         	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 3);
-
+        	}
         }
     }));
     
@@ -235,8 +241,7 @@ public class GameController implements Initializable{
         
         @Override
         public void handle(ActionEvent event) {
-        		
-        	
+        
         }
     }));
     
@@ -258,7 +263,17 @@ public class GameController implements Initializable{
         	
         	if (G1.hero.Node.getLayoutX() <= 250 ) {
         		
-        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2.5); 
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2.5);
+                for (int i = 0;i < G1.Islands.size(); i++){
+                    if((G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())) && G1.hero.Node.getBoundsInParent().getMaxY() > (G1.Islands.get(i).Node.getBoundsInParent()).getMinY() +1 ){
+                    T1.stop();
+                    Dash.stop();
+
+                    
+                    jump(G1.hero.Node);
+                    }
+
+                }
         	}	
         	
         }
@@ -304,6 +319,7 @@ public class GameController implements Initializable{
     	jump.setCycleCount(56);
     	rest.setCycleCount(15);
     	rest.play();
+//    	Dash.setOnFinished(event -> rest.stop());
     	rest.setOnFinished(event -> jump.play());
     	jump.setOnFinished(e -> T1.play());
 //        TranslateTransition transition = new TranslateTransition();
