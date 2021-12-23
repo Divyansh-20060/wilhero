@@ -55,6 +55,15 @@ class Hero extends gameobjcts{
         Node = new ImageView("hero.png");
         Node.setLayoutX(60);
         Node.setLayoutY(200);
+
+    }
+}
+
+class Coin extends gameobjcts{
+    public Coin(double x, double y){
+        Node = new ImageView("Coin.png");
+        Node.setLayoutX(x+90);
+        Node.setLayoutY(y);
     }
 }
 
@@ -63,6 +72,7 @@ class Game implements Serializable{
     public Hero hero;
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public ArrayList<Orc> Orcs = new ArrayList<Orc>();
+    public ArrayList<Coin> Coins = new ArrayList<Coin>();
     public Game(){
         hero = new Hero();
         islands i1 = new islands(40,300);
@@ -90,6 +100,22 @@ class Game implements Serializable{
         if (OV){
             Orc orc = new Orc(i.Node.getLayoutX() + 90,i.Node.getLayoutY() - 60);
             Orcs.add(orc);
+        }
+
+        else{
+            int No_C = rand.nextInt(4);
+            if(No_C != 0){
+                double DX = i.Node.getLayoutX() + 30;
+                for(int j = 0; j<2;j ++){
+                    double DY = i.Node.getLayoutY() - 140;
+                    for(int k = 0; k <No_C; k++){
+                        Coin coin = new Coin(DX,DY);
+                        Coins.add(coin);
+                        DY = DY - 40;
+                    }
+                    DX = DX - 50;
+                }
+            }
         }
 
         //return i;
@@ -232,6 +258,11 @@ public class GameController implements Initializable{
         		for (int i = 0; i < G1.Orcs.size(); i++) {
         			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -0.5 );
         		}
+
+                for (int i = 0; i < G1.Coins.size(); i++) {
+                    G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -0.5 );
+                }
+
         	} 	
         	
         }
@@ -383,6 +414,10 @@ public class GameController implements Initializable{
 
         for (int i = 0; i<G1.Orcs.size();i++){
             anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+        }
+
+        for (int i = 0; i<G1.Coins.size();i++){
+            anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
         }
     }
 }

@@ -12,7 +12,7 @@
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GameController">
    <children>
-      <ImageView fx:id="anchorpane" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true">
+      <ImageView fx:id="BG" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true">
          <image>
             <Image url="@images/WMV.gif" />
          </image>
