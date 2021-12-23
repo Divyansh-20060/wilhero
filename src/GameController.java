@@ -31,6 +31,7 @@ class gameobjcts{
 }
 
 class islands extends gameobjcts {
+    public int coins = 0;
     public islands(double x, double y){
         Node = new ImageView("island.png");
         Node.setLayoutX(x);
@@ -82,7 +83,7 @@ class Game implements Serializable{
         }
     }
 
-    private void IslandSpawner(){
+    public void IslandSpawner(){
         double New_Y[] = {-50,0,50};
         Random rand = new Random();
         int y = rand.nextInt(3);
@@ -105,6 +106,7 @@ class Game implements Serializable{
         else{
             int No_C = rand.nextInt(4);
             if(No_C != 0){
+                i.coins = No_C;
                 double DX = i.Node.getLayoutX() + 30;
                 for(int j = 0; j<2;j ++){
                     double DY = i.Node.getLayoutY() - 140;
@@ -156,6 +158,9 @@ public class GameController implements Initializable{
 
     @FXML
     private Button Start;
+
+    @FXML
+    private ImageView BG;
 
     @FXML
     private Button Stop;
@@ -248,16 +253,45 @@ public class GameController implements Initializable{
         @Override
         
         public void handle(ActionEvent event) {
-        	
+            //////////buggy code starts
+
+//            boolean leftI = G1.Islands.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
+//            boolean leftO;
+//            if(G1.Orcs.size() != 0){
+//            leftO = G1.Orcs.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
+//            }
+//            else{
+//                leftO = false;
+//            }
+//            if(leftI){
+//
+//                anchorPane.getChildren().remove(G1.Islands.get(0).Node);
+//                G1.Islands.remove(0);
+//                G1.IslandSpawner();
+//                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() - 1).Node);
+//            }
+//            if(leftO){
+//                System.out.println("ayo");
+//                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
+//                G1.Orcs.remove(0);
+//                for(int i = 0; i < G1.Orcs.size(); i++){
+//                    if(!anchorPane.getChildren().contains(G1.Orcs.get(i).Node)){
+//                        anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+//                    }
+//                }
+//            }
+            /////////clean code starts
+
         	if (G1.hero.Node.getLayoutX() >= 60) {
-        		
+
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 0.5 );
         		for (int i = 0; i < G1.Islands.size(); i++) {
         			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -0.5 );
         		}
         		for (int i = 0; i < G1.Orcs.size(); i++) {
         			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -0.5 );
-        		}
+
+                }
 
                 for (int i = 0; i < G1.Coins.size(); i++) {
                     G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -0.5 );
@@ -324,7 +358,23 @@ public class GameController implements Initializable{
         
         Dash.play();
         
-        Dash.setOnFinished(event -> T1.play());
+        Dash.setOnFinished(e -> {
+            boolean left = G1.Islands.get(0).Node.getBoundsInLocal().getMaxX() <= BG.getBoundsInLocal().getMinX();
+            if(left){
+                anchorPane.getChildren().remove(G1.Islands.get(0).Node);
+                G1.Islands.remove(0);
+                G1.IslandSpawner();
+                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() -1 ).Node);
+            }
+//
+//            if(!G1.Orcs.get(0).Node.getBoundsInParent().intersects(BG.getBoundsInParent())){
+//                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
+//                G1.Orcs.remove(0);
+//            }
+
+            T1.play();
+        }
+        );
         
 
         
