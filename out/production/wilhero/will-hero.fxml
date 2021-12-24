@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -43,12 +45,33 @@
             <Font name="Ubuntu Bold" size="96.0" />
          </font>
          <effect>
-            <DropShadow height="0.0" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0">
+            <DropShadow height="1.0" offsetX="3.0" offsetY="3.0" radius="0.0" width="0.0">
                <color>
-                  <Color red="0.34736841917037964" green="0.34736841917037964" blue="0.34736841917037964" />
+                  <Color red="0.16862745583057404" />
                </color>
             </DropShadow>
          </effect>
       </Text>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0084ff" height="51.0" layoutX="738.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="220.0">
+         <effect>
+            <DropShadow height="1.0" offsetX="2.0" offsetY="2.0" radius="0.0" width="0.0">
+               <color>
+                  <Color red="0.16862745583057404" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Rectangle>
+      <Label fx:id="coinCounter" layoutX="755.0" layoutY="3.0" prefHeight="46.0" prefWidth="92.0" text="0" textFill="#ffdf00">
+         <font>
+            <Font name="Ubuntu Bold" size="38.0" />
+         </font>
+         <effect>
+            <DropShadow height="5.72" offsetX="3.0" offsetY="3.0" radius="1.52" width="2.36">
+               <color>
+                  <Color opacity="0.029999999329447746" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Label>
    </children>
 </AnchorPane>

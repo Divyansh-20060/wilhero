@@ -5,6 +5,7 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -70,12 +71,15 @@ class Coin extends gameobjcts{
 
 class Game implements Serializable{
     public int[] isl = {0,0};
+    public int coinsCollected;
     public Hero hero;
+    
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public ArrayList<Orc> Orcs = new ArrayList<Orc>();
     public ArrayList<Coin> Coins = new ArrayList<Coin>();
     public Game(){
         hero = new Hero();
+        
         islands i1 = new islands(40,300);
         Islands.add(i1);
         for (int i = 0; i<3;i++){
@@ -111,8 +115,8 @@ class Game implements Serializable{
                 for(int j = 0; j<2;j ++){
                     double DY = i.Node.getLayoutY() - 140;
                     for(int k = 0; k <No_C; k++){
-                        Coin coin = new Coin(DX,DY);
-                        Coins.add(coin);
+                        
+                        Coins.add(new Coin(DX,DY));
                         DY = DY - 40;
                     }
                     DX = DX - 50;
@@ -149,6 +153,12 @@ class Game implements Serializable{
 
 public class GameController implements Initializable{
     @FXML
+    private ImageView coinIcon;
+	
+	@FXML
+    private Label coinCounter;
+    
+	@FXML
     private Text WILLHERO;
 	
 	@FXML
@@ -177,8 +187,17 @@ public class GameController implements Initializable{
 
     private boolean DT = false;
     
+    Timeline Dash_orc = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
+        
+        @Override
+        public void handle(ActionEvent event) {
+        	
+        }
+    }
+    ));
+    
     Timeline T2 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
-        double DY = 2.0;
+        
         @Override
         public void handle(ActionEvent event) {
         	for (int j = 0; j < G1.Orcs.size(); j++) {
@@ -189,9 +208,6 @@ public class GameController implements Initializable{
             	for (int j = 0 ;j < G1.Orcs.size(); j++) {
 	                if(G1.Orcs.get(j).Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
 	                T2.stop();
-	                
-	
-	                
 	                jump_orc();
 	                }
             	}
@@ -204,11 +220,22 @@ public class GameController implements Initializable{
     
 
     Timeline T1 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
-        double DY = 2.0;
+        
         @Override
         public void handle(ActionEvent event) {
-        	if (true) {
+        	if (jump.getStatus() != Animation.Status.RUNNING && Dash.getStatus() != Animation.Status.RUNNING) {
         		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 2);
+        		for (int i = 0; i < G1.Coins.size(); i++) {
+        			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
+        				
+        				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
+        				G1.Coins.remove(i);
+        				G1.coinsCollected++;
+        				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+        				System.out.println("coin removed");
+        				
+        			}
+        		}
         	}
             for (int i = 0;i < G1.Islands.size(); i++){
                 if(G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
@@ -225,7 +252,7 @@ public class GameController implements Initializable{
     ));
     
     Timeline jump_orc = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
-        double DX = 2.0;
+        
         @Override
         
         public void handle(ActionEvent event) {
@@ -238,18 +265,32 @@ public class GameController implements Initializable{
     }));
     
     Timeline jump = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
-        double DX = 2.0;
+        
         @Override
         
         public void handle(ActionEvent event) {
-        	if (T1.getStatus() == Animation.Status.STOPPED) {
+        	if ( Dash.getStatus() != Animation.Status.RUNNING) {
         	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 3);
+    		for (int i = 0; i < G1.Coins.size(); i++) {
+    			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
+    				
+    				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
+    				G1.Coins.remove(i);
+    				G1.coinsCollected++;
+    				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+    				System.out.println("coin removed");
+    				
+    			}
+    		}
+        	}
+        	else {
+        		jump.stop();
         	}
         }
     }));
     
-    Timeline DashBack = new Timeline(new KeyFrame(Duration.millis(1.5), new EventHandler<ActionEvent>() {
-        double DX = 2.0;
+    Timeline DashBack = new Timeline(new KeyFrame(Duration.millis(2), new EventHandler<ActionEvent>() {
+        
         @Override
         
         public void handle(ActionEvent event) {
@@ -282,7 +323,7 @@ public class GameController implements Initializable{
 //            }
             /////////clean code starts
 
-        	if (G1.hero.Node.getLayoutX() >= 60) {
+        	if (G1.hero.Node.getLayoutX() >= 60 && G1.hero.Node.getLayoutX() <= 250) {
 
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 0.5 );
         		for (int i = 0; i < G1.Islands.size(); i++) {
@@ -297,7 +338,21 @@ public class GameController implements Initializable{
                     G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -0.5 );
                 }
 
-        	} 	
+        	}
+        	else if(G1.hero.Node.getLayoutX() >250) {
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 0.5 );
+        		for (int i = 0; i < G1.Islands.size(); i++) {
+        			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -1.5 );
+        		}
+        		for (int i = 0; i < G1.Orcs.size(); i++) {
+        			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -1.5 );
+
+                }
+
+                for (int i = 0; i < G1.Coins.size(); i++) {
+                    G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -1.5 );
+                }
+        	}
         	
         }
     }));
@@ -320,23 +375,35 @@ public class GameController implements Initializable{
     }));
     
    
-    Timeline Dash = new Timeline(new KeyFrame(Duration.millis(1.3), new EventHandler<ActionEvent>() {
-        double DX = 2.0;
+    Timeline Dash = new Timeline(new KeyFrame(Duration.millis(2), new EventHandler<ActionEvent>() {
+        
         @Override
         
         public void handle(ActionEvent event) {
         	
+        	
         	if (G1.hero.Node.getLayoutX() <= 250 ) {
         		
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2.5);
+        		for (int i = 0; i < G1.Coins.size(); i++) {
+        			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
+        				
+        				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
+        				G1.Coins.remove(i);
+        				G1.coinsCollected++;
+        				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+        				System.out.println("coin removed");
+        			}
+        		}
                 for (int i = 0;i < G1.Islands.size(); i++){
-                    if((G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())) && G1.hero.Node.getBoundsInParent().getMaxY() > (G1.Islands.get(i).Node.getBoundsInParent()).getMinY() +1 ){
+                    if((G1.hero.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())) && G1.hero.Node.getBoundsInParent().getMaxY() > (G1.Islands.get(i).Node.getBoundsInParent()).getMinY() +2 ){
                     T1.stop();
                     Dash.stop();
 
                     
                     jump(G1.hero.Node);
                     }
+                    
 
                 }
         	}	
@@ -457,6 +524,7 @@ public class GameController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         anchorPane.getChildren().addAll(G1.hero.Node);
+        
 
         for (int i = 0; i<G1.Islands.size();i++){
             anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
@@ -469,6 +537,8 @@ public class GameController implements Initializable{
         for (int i = 0; i<G1.Coins.size();i++){
             anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
         }
+        
+        
     }
 }
 
