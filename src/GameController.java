@@ -103,7 +103,7 @@ class Game implements Serializable{
         }
         Islands.add(i);
         if (OV){
-            Orc orc = new Orc(i.Node.getLayoutX() + 90,i.Node.getLayoutY() - 60);
+            Orc orc = new Orc(i.Node.getLayoutX() + 90,i.Node.getLayoutY() - 55);
             Orcs.add(orc);
         }
 
@@ -257,8 +257,9 @@ public class GameController implements Initializable{
         
         public void handle(ActionEvent event) {
         	for (int i = 0; i < G1.Orcs.size(); i++) {
-        		
+        		if(T2.getStatus() != Animation.Status.RUNNING){
         		G1.Orcs.get(i).Node.setLayoutY(G1.Orcs.get(i).Node.getLayoutY() - 3);
+                }
         	}
 
         }
@@ -294,33 +295,41 @@ public class GameController implements Initializable{
         @Override
         
         public void handle(ActionEvent event) {
+
+
             //////////buggy code starts
 
-//            boolean leftI = G1.Islands.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
-//            boolean leftO;
-//            if(G1.Orcs.size() != 0){
-//            leftO = G1.Orcs.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
-//            }
-//            else{
-//                leftO = false;
-//            }
-//            if(leftI){
-//
-//                anchorPane.getChildren().remove(G1.Islands.get(0).Node);
-//                G1.Islands.remove(0);
-//                G1.IslandSpawner();
-//                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() - 1).Node);
-//            }
-//            if(leftO){
-//                System.out.println("ayo");
-//                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
-//                G1.Orcs.remove(0);
-//                for(int i = 0; i < G1.Orcs.size(); i++){
-//                    if(!anchorPane.getChildren().contains(G1.Orcs.get(i).Node)){
-//                        anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
-//                    }
-//                }
-//            }
+            boolean leftI = G1.Islands.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
+            boolean leftO;
+            if(G1.Orcs.size() != 0){
+            leftO = G1.Orcs.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
+            }
+            else{
+                leftO = false;
+            }
+            if(leftI){
+                anchorPane.getChildren().removeAll(G1.Islands.get(0).Node);
+                G1.Islands.remove(0);
+                G1.IslandSpawner();
+                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() - 1).Node);
+                for(int i = 0; i < G1.Orcs.size(); i++){
+                    if(!anchorPane.getChildren().contains(G1.Orcs.get(i).Node)){
+                        anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+                    }
+                }
+
+                for(int i = 0; i < G1.Coins.size(); i++){
+                    if(!anchorPane.getChildren().contains(G1.Coins.get(i).Node)){
+                        anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
+                    }
+                }
+            }
+            if(leftO){
+                System.out.println("ayo");
+                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
+                G1.Orcs.remove(0);
+            }
+
             /////////clean code starts
 
         	if (G1.hero.Node.getLayoutX() >= 60 && G1.hero.Node.getLayoutX() <= 250) {
