@@ -82,7 +82,7 @@ class Game implements Serializable{
         
         islands i1 = new islands(40,300);
         Islands.add(i1);
-        for (int i = 0; i<3;i++){
+        for (int i = 0; i<50;i++){
         IslandSpawner();
         }
     }
@@ -299,36 +299,36 @@ public class GameController implements Initializable{
 
             //////////buggy code starts
 
-            boolean leftI = G1.Islands.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
-            boolean leftO;
-            if(G1.Orcs.size() != 0){
-            leftO = G1.Orcs.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
-            }
-            else{
-                leftO = false;
-            }
-            if(leftI){
-                anchorPane.getChildren().removeAll(G1.Islands.get(0).Node);
-                G1.Islands.remove(0);
-                G1.IslandSpawner();
-                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() - 1).Node);
-                for(int i = 0; i < G1.Orcs.size(); i++){
-                    if(!anchorPane.getChildren().contains(G1.Orcs.get(i).Node)){
-                        anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
-                    }
-                }
-
-                for(int i = 0; i < G1.Coins.size(); i++){
-                    if(!anchorPane.getChildren().contains(G1.Coins.get(i).Node)){
-                        anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
-                    }
-                }
-            }
-            if(leftO){
-                System.out.println("ayo");
-                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
-                G1.Orcs.remove(0);
-            }
+//            boolean leftI = G1.Islands.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
+//            boolean leftO;
+//            if(G1.Orcs.size() != 0){
+//            leftO = G1.Orcs.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
+//            }
+//            else{
+//                leftO = false;
+//            }
+//            if(leftI){
+//                anchorPane.getChildren().removeAll(G1.Islands.get(0).Node);
+//                G1.Islands.remove(0);
+//                G1.IslandSpawner();
+//                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() - 1).Node);
+//                for(int i = 0; i < G1.Orcs.size(); i++){
+//                    if(!anchorPane.getChildren().contains(G1.Orcs.get(i).Node)){
+//                        anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+//                    }
+//                }
+//
+//                for(int i = 0; i < G1.Coins.size(); i++){
+//                    if(!anchorPane.getChildren().contains(G1.Coins.get(i).Node)){
+//                        anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
+//                    }
+//                }
+//            }
+//            if(leftO){
+//                System.out.println("ayo");
+//                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
+//                G1.Orcs.remove(0);
+//            }
 
             /////////clean code starts
 
@@ -363,6 +363,7 @@ public class GameController implements Initializable{
                 }
         	}
         	
+        	
         }
     }));
     
@@ -389,6 +390,10 @@ public class GameController implements Initializable{
         @Override
         
         public void handle(ActionEvent event) {
+        	
+        	
+        	
+        	
         	
         	
         	if (G1.hero.Node.getLayoutX() <= 250 ) {
