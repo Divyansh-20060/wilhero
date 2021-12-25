@@ -334,32 +334,32 @@ public class GameController implements Initializable{
 
         	if (G1.hero.Node.getLayoutX() >= 60 && G1.hero.Node.getLayoutX() <= 250) {
 
-        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 0.5 );
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
         		for (int i = 0; i < G1.Islands.size(); i++) {
-        			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -0.5 );
+        			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() - 1 );
         		}
         		for (int i = 0; i < G1.Orcs.size(); i++) {
-        			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -0.5 );
+        			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() - 1 );
 
                 }
 
                 for (int i = 0; i < G1.Coins.size(); i++) {
-                    G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -0.5 );
+                    G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -1 );
                 }
 
         	}
         	else if(G1.hero.Node.getLayoutX() >250) {
-        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 0.5 );
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
         		for (int i = 0; i < G1.Islands.size(); i++) {
-        			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -1.5 );
+        			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -1.8 );
         		}
         		for (int i = 0; i < G1.Orcs.size(); i++) {
-        			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -1.5 );
+        			G1.Orcs.get(i).Node.setLayoutX(G1.Orcs.get(i).Node.getLayoutX() -1.8 );
 
                 }
 
                 for (int i = 0; i < G1.Coins.size(); i++) {
-                    G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -1.5 );
+                    G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -1.8 );
                 }
         	}
         	
@@ -396,12 +396,11 @@ public class GameController implements Initializable{
         	
         	
         	
-        	if (G1.hero.Node.getLayoutX() <= 250 ) {
+        	if (G1.hero.Node.getLayoutX() <= 250) {
         		
-        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 2.5);
+        		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 3);
         		for (int i = 0; i < G1.Coins.size(); i++) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
-        				
         				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
         				G1.Coins.remove(i);
         				G1.coinsCollected++;
