@@ -41,7 +41,9 @@ class islands extends gameobjcts {
 }
 
 class Orc extends gameobjcts{
-
+	public Timeline down_Timeline;
+	public Timeline up_Timeline;
+	public Timeline right_Timeline;
     public Orc (double x, double y){
         String orcT[] = {"Orc1.png","RedOrc1.png"};
         Random rand = new Random();
@@ -50,15 +52,48 @@ class Orc extends gameobjcts{
         Node.setLayoutX(x);
         Node.setLayoutY(y);
     }
+    public void setDown_Timeline(Timeline down_Timeline){
+    	this.down_Timeline = down_Timeline;
+    }
+    public void setUp_Timeline(Timeline up_Timeline){
+    	this.up_Timeline = up_Timeline;
+    }
+    public void setRight_Timeline(Timeline right_Timeline){
+    	this.right_Timeline = right_Timeline;
+    }
+    
+    
+
+    
 }
 
 class Hero extends gameobjcts{
+	Timeline up_Timeline;
+	Timeline down_Timeline;
+	Timeline right_Timeline;
+	Timeline left_Timeline;
+	
     public Hero(){
         Node = new ImageView("hero.png");
         Node.setLayoutX(60);
         Node.setLayoutY(200);
 
     }
+    
+    public void setUp_Timeline(Timeline up_Timeline) {
+    	this.up_Timeline = up_Timeline;
+    }
+    public void setDown_Timeline(Timeline down_Timeline) {
+    	this.down_Timeline = down_Timeline;
+    }
+    public void setRight_Timeline(Timeline right_Timeline) {
+    	this.right_Timeline = right_Timeline;
+    }
+    public void setLeft_Timeline(Timeline left_Timeline) {
+    	this.left_Timeline = left_Timeline;
+    }
+    
+    
 }
 
 class Coin extends gameobjcts{
@@ -84,6 +119,45 @@ class Game implements Serializable{
         Islands.add(i1);
         for (int i = 0; i<50;i++){
         IslandSpawner();
+        
+        Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+            	
+            }
+        }));
+        
+        Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+            	
+            }
+        }));
+        
+        Timeline right_Timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+            	
+            }
+        }));
+        
+        Timeline left_Timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            
+            @Override 
+            public void handle(ActionEvent event) {
+            	
+            }
+        }));
+        
+        
+        
+       
+        
+        
+        
         }
     }
 
@@ -104,6 +178,74 @@ class Game implements Serializable{
         Islands.add(i);
         if (OV){
             Orc orc = new Orc(i.Node.getLayoutX() + 90,i.Node.getLayoutY() - 55);
+            
+            Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(14), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                	if (orc.up_Timeline.getStatus() != Animation.Status.RUNNING && orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
+                		orc.Node.setLayoutY(orc.Node.getLayoutY() + 2);
+                		if (hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && (hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() )) {
+                			//game over; 
+                			
+                		}
+                		else if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && (hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) ) {
+                			//hero hits the top of orc
+                			
+                		}
+
+                	}
+                    for (int i = 0;i < Islands.size(); i++){
+                        if(orc.Node.getBoundsInParent().intersects(Islands.get(i).Node.getBoundsInParent())){
+                        orc.down_Timeline.stop();
+                        
+
+                        orc.up_Timeline.setCycleCount(56);
+                        orc.up_Timeline.play();
+                        orc.up_Timeline.setOnFinished(ev -> orc.down_Timeline.play());
+                        }
+
+                    }
+                }
+            }
+            ));
+            
+            Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(14), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                	if ( orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
+                    	orc.Node.setLayoutY(orc.Node.getLayoutY() - 3);
+                		if (hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && (hero.Node.getBoundsInParent().getMinY() >= orc.Node.getBoundsInParent().getMaxY() )) {
+                			//game over
+                			
+                		}
+                		else if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && (hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) ) {
+                			//hero hits the top of orc
+                			
+                		}
+
+                    	}
+                    	else {
+                    		orc.up_Timeline.stop();
+                    	}
+                }
+            }
+            ));
+            
+            Timeline right_Timeline = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                	
+                }
+            }
+            ));
+            
+            
+            
+            
+            orc.setDown_Timeline(down_Timeline);
+            orc.setUp_Timeline(up_Timeline);
+            orc.setRight_Timeline(right_Timeline);
+            
             Orcs.add(orc);
         }
 
@@ -187,38 +329,7 @@ public class GameController implements Initializable{
 
     private boolean DT = false;
     
-    Timeline Dash_orc = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
-        
-        @Override
-        public void handle(ActionEvent event) {
-        	
-        }
-    }
-    ));
     
-    Timeline T2 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
-        
-        @Override
-        public void handle(ActionEvent event) {
-        	for (int j = 0; j < G1.Orcs.size(); j++) {
-        		G1.Orcs.get(j).Node.setLayoutY(G1.Orcs.get(j).Node.getLayoutY() + 2);
-        	}
-        	
-            for (int i = 0;i < G1.Islands.size(); i++){
-            	for (int j = 0 ;j < G1.Orcs.size(); j++) {
-	                if(G1.Orcs.get(j).Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
-	                T2.stop();
-	                jump_orc();
-	                }
-            	}
-
-            }
-        }
-    }
-    ));
-    
-    
-
     Timeline T1 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
         
         @Override
@@ -232,7 +343,7 @@ public class GameController implements Initializable{
         				G1.Coins.remove(i);
         				G1.coinsCollected++;
         				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
-        				System.out.println("coin removed");
+        				
         				
         			}
         		}
@@ -245,25 +356,12 @@ public class GameController implements Initializable{
                 
                 jump(G1.hero.Node);
                 }
-
             }
         }
     }
     ));
     
-    Timeline jump_orc = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
-        
-        @Override
-        
-        public void handle(ActionEvent event) {
-        	for (int i = 0; i < G1.Orcs.size(); i++) {
-        		if(T2.getStatus() != Animation.Status.RUNNING){
-        		G1.Orcs.get(i).Node.setLayoutY(G1.Orcs.get(i).Node.getLayoutY() - 3);
-                }
-        	}
 
-        }
-    }));
     
     Timeline jump = new Timeline(new KeyFrame(Duration.millis(7), new EventHandler<ActionEvent>() {
         
@@ -279,7 +377,7 @@ public class GameController implements Initializable{
     				G1.Coins.remove(i);
     				G1.coinsCollected++;
     				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
-    				System.out.println("coin removed");
+    				
     				
     			}
     		}
@@ -367,20 +465,12 @@ public class GameController implements Initializable{
         }
     }));
     
-    Timeline rest_orc = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-        
-        @Override
-        public void handle(ActionEvent event) {
-        
-        }
-    }));
+
     
     Timeline rest = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
         
         @Override
         public void handle(ActionEvent event) {
-        		
-        	
         }
     }));
     
@@ -391,11 +481,6 @@ public class GameController implements Initializable{
         
         public void handle(ActionEvent event) {
         	
-        	
-        	
-        	
-        	
-        	
         	if (G1.hero.Node.getLayoutX() <= 250) {
         		
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 3);
@@ -405,7 +490,7 @@ public class GameController implements Initializable{
         				G1.Coins.remove(i);
         				G1.coinsCollected++;
         				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
-        				System.out.println("coin removed");
+        				
         			}
         		}
                 for (int i = 0;i < G1.Islands.size(); i++){
@@ -460,13 +545,7 @@ public class GameController implements Initializable{
         
 
     }
-    public void jump_orc() {
-    	jump_orc.setCycleCount(56);
-    	rest_orc.setCycleCount(70);
-    	rest_orc.play();
-    	rest_orc.setOnFinished(event -> jump_orc.play());
-    	jump_orc.setOnFinished(event -> T2.play());
-    }
+    
     public void jump(Node pp){
 //	ScaleTransition scale = new ScaleTransition();
 //    	scale.setNode(pp);
@@ -506,8 +585,13 @@ public class GameController implements Initializable{
     	}
     	
         DT = true;
-        T2.setCycleCount(Animation.INDEFINITE);
-        T2.play();
+//        T2.setCycleCount(Animation.INDEFINITE);
+//        T2.play();
+        for (int i = 0; i < G1.Orcs.size(); i++) {
+        	G1.Orcs.get(i).down_Timeline.setCycleCount(Animation.INDEFINITE);
+        	G1.Orcs.get(i).down_Timeline.play();
+        }
+        
         T1.setCycleCount(Animation.INDEFINITE);
         T1.play();
         //anime(hero);
