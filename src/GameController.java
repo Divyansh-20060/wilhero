@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -25,6 +26,11 @@ import java.util.concurrent.TimeUnit;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Interpolator;
 
+
+class game_data{
+    public String helmet = "hero.png";
+    public int Score = 0;
+}
 
 class gameobjcts{
     public ImageView Node;
@@ -73,8 +79,8 @@ class Hero extends gameobjcts{
 	Timeline right_Timeline;
 	Timeline left_Timeline;
 	
-    public Hero(){
-        Node = new ImageView("hero.png");
+    public Hero(String st){
+        Node = new ImageView(st);
         Node.setLayoutX(60);
         Node.setLayoutY(200);
 
@@ -112,8 +118,8 @@ class Game implements Serializable{
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public ArrayList<Orc> Orcs = new ArrayList<Orc>();
     public ArrayList<Coin> Coins = new ArrayList<Coin>();
-    public Game(){
-        hero = new Hero();
+    public Game(String st){
+        hero = new Hero(st);
         
         islands i1 = new islands(40,300);
         Islands.add(i1);
@@ -166,14 +172,14 @@ class Game implements Serializable{
         Random rand = new Random();
         int y = rand.nextInt(3);
         boolean OV = rand.nextBoolean();
-        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 450),
+        islands i = new islands((Islands.get(Islands.size()-1).Node.getLayoutX()+ 420),
                 (Islands.get(Islands.size()-1).Node.getLayoutY() + New_Y[y]));
         if (i.Node.getLayoutY() > 450){
             i.Node.setLayoutY(450);
         }
 
-        if (i.Node.getLayoutY() < 100){
-            i.Node.setLayoutY(100);
+        if (i.Node.getLayoutY() < 200){
+            i.Node.setLayoutY(200);
         }
         Islands.add(i);
         if (OV){
@@ -294,8 +300,32 @@ class Game implements Serializable{
 }
 
 public class GameController implements Initializable{
+
+    @FXML
+    private Label Score;
+
     @FXML
     private ImageView coinIcon;
+
+//  HELMET CHANGING
+    @FXML
+    private ImageView h1;
+
+    @FXML
+    private ImageView h2;
+
+    @FXML
+    private ImageView exit;
+
+    @FXML
+    private AnchorPane helmets;
+
+    @FXML
+    private Label Helm_Lab;
+
+    @FXML
+    private Button Helmet;
+//  HELMET CHANGING
 	
 	@FXML
     private Label coinCounter;
@@ -323,13 +353,53 @@ public class GameController implements Initializable{
     
     private boolean hasStarted;
     
-    public Game G1 = new Game();
+    public Game G1;
 
     public TranslateTransition transition = new TranslateTransition();
 
     private boolean DT = false;
+    public game_data GD = new game_data();
     
-    
+    //HELMET CHANGING
+    public void onH1click(){
+        if (GD.helmet != "hero.png"){
+            GD.helmet = "hero.png";
+            helmets.setVisible(false);
+            helmets.setDisable(true);
+            Helm_Lab.setText("Choose Helmet");
+        }
+        else{
+            Helm_Lab.setText("Helmet already equipped!");
+        }
+    }
+
+    public void onH2click(){
+
+        if (GD.helmet != "hero2.png"){
+            GD.helmet = "hero2.png";
+            helmets.setVisible(false);
+            helmets.setDisable(true);
+            Helm_Lab.setText("Choose Helmet");
+        }
+        else{
+            Helm_Lab.setText("Helmet already equipped!");
+        }
+    }
+
+    public void onHelmetBClick(ActionEvent event){
+        helmets.setVisible(true);
+        helmets.setDisable(false);
+    }
+
+    public void CancelB(){
+        System.out.println("h1");
+        helmets.setDisable(true);
+        System.out.println("h2");
+        helmets.setVisible(false);
+    }
+
+    //HELMET CHANGING
+
     Timeline T1 = new Timeline(new KeyFrame(Duration.millis(4), new EventHandler<ActionEvent>() {
         
         @Override
@@ -576,12 +646,30 @@ public class GameController implements Initializable{
 
     public void onStartButtonClick() {
     	if(!hasStarted) {
+
+            G1 = new Game(GD.helmet);
+            anchorPane.getChildren().addAll(G1.hero.Node);
+            System.out.println(G1.hero.Node.getImage());
+
+
+            for (int i = 0; i<G1.Islands.size();i++){
+                anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
+            }
+
+            for (int i = 0; i<G1.Orcs.size();i++){
+                anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+            }
+
+            for (int i = 0; i<G1.Coins.size();i++){
+                anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
+            }
     		hasStarted = true;
 	    	TranslateTransition transition = new TranslateTransition();
 	    	transition.setNode(WILLHERO);
 	    	transition.setDuration(Duration.millis(250));
 	    	transition.setByY(-230);
 	    	transition.play();
+
     	}
     	
         DT = true;
@@ -608,6 +696,8 @@ public class GameController implements Initializable{
 
     public void onDashButtonClick(ActionEvent event){
         if(DT){
+            GD.Score++;
+            Score.setText(String.valueOf(GD.Score));
             Dash();}
     }
 
@@ -620,20 +710,21 @@ public class GameController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        anchorPane.getChildren().addAll(G1.hero.Node);
-        
-
-        for (int i = 0; i<G1.Islands.size();i++){
-            anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
-        }
-
-        for (int i = 0; i<G1.Orcs.size();i++){
-            anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
-        }
-
-        for (int i = 0; i<G1.Coins.size();i++){
-            anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
-        }
+//        anchorPane.getChildren().addAll(G1.hero.Node);
+//        System.out.println(G1.hero.Node.getImage());
+//
+//
+//        for (int i = 0; i<G1.Islands.size();i++){
+//            anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
+//        }
+//
+//        for (int i = 0; i<G1.Orcs.size();i++){
+//            anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+//        }
+//
+//        for (int i = 0; i<G1.Coins.size();i++){
+//            anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
+//        }
         
         
     }

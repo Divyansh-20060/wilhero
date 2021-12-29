@@ -19,6 +19,7 @@
             <Image url="@images/WMV.gif" />
          </image>
       </ImageView>
+      <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#onHelmetBClick" text="Helmets" />
       <Button fx:id="dash" layoutX="328.0" layoutY="472.0" mnemonicParsing="false" onAction="#onDashButtonClick" prefHeight="51.0" prefWidth="98.0" text="dash">
          <font>
             <Font size="26.0" />
@@ -78,5 +79,35 @@
             <Image url="@Coin.png" />
          </image>
       </ImageView>
+      <AnchorPane fx:id="helmets" disable="true" layoutX="305.0" layoutY="234.0" prefHeight="139.0" prefWidth="123.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b0" height="139.0" stroke="BLACK" strokeType="INSIDE" width="350.0" />
+            <Label fx:id="Helm_Lab" layoutX="90.0" layoutY="1.0" text="Choose Helmet" textFill="#00ddff">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="h1" fitHeight="77.0" fitWidth="92.0" layoutX="48.0" layoutY="44.0" onMouseClicked="#onH1click" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@hero.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="h2" fitHeight="77.0" fitWidth="84.0" layoutX="215.0" layoutY="44.0" onMouseClicked="#onH2click" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@hero2.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="exit" fitHeight="33.0" fitWidth="31.0" layoutX="313.0" layoutY="5.0" onMouseClicked="#CancelB" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@close-icon-13612.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <Label fx:id="Score" layoutX="741.0" layoutY="455.0" prefHeight="55.0" prefWidth="106.0" text="0" textFill="RED">
+         <font>
+            <Font name="Candara Light" size="58.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
