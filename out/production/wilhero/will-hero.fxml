@@ -109,5 +109,7 @@
             <Font name="Candara Light" size="58.0" />
          </font>
       </Label>
+      <Button layoutX="17.0" layoutY="110.0" mnemonicParsing="false" onAction="#onPauseClick" text="Pause" />
+      <Button layoutX="78.0" layoutY="110.0" mnemonicParsing="false" onAction="#onResumeClick" text="Resume" />
    </children>
 </AnchorPane>
