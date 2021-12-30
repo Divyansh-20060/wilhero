@@ -146,6 +146,7 @@ class Game implements Serializable{
     }
     
     public void resumeGame() {
+    	this.isPaused = false;
     	if (hero.up_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.up_Timeline.play();
     	}
@@ -316,7 +317,7 @@ class Game implements Serializable{
                 public void handle(ActionEvent event) {
                 	
                 	
-                	orc.Node.setLayoutX(orc.Node.getLayoutX() + 1);
+                	orc.Node.setLayoutX(orc.Node.getLayoutX() + 1.5);
                 	
                 	orc.right_Timeline.setOnFinished(t -> orc.down_Timeline.play());
                 }
@@ -443,8 +444,11 @@ public class GameController implements Initializable{
     }
     
     public void onResumeClick() {
+    	
     	G1.resumeGame();
+    	
     }
+    	
     
     //HELMET CHANGING
     public void onH1click(){
@@ -588,6 +592,8 @@ public class GameController implements Initializable{
 
             /////////clean code starts
 
+        	
+
         	if (G1.hero.Node.getLayoutX() >= 60 && G1.hero.Node.getLayoutX() <= 250) {
 
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
@@ -638,6 +644,7 @@ public class GameController implements Initializable{
         @Override
         
         public void handle(ActionEvent event) {
+        	
         	
         	if (G1.hero.Node.getLayoutX() <= 250) {
         		if (true) {
@@ -792,8 +799,8 @@ public class GameController implements Initializable{
 
     public void onDashButtonClick(ActionEvent event){
         if(DT){
-            GD.Score++;
-            Score.setText(String.valueOf(GD.Score));
+//            GD.Score++;
+//            Score.setText(String.valueOf(GD.Score));
             if (!G1.isPaused ) {
             	Dash();
             }
