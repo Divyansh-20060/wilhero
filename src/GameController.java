@@ -383,7 +383,12 @@ class Game implements Serializable{
 
     public void save(game_data GD) throws IOException{
         GD.CopyData(this);
-        String st = "GAME " + GD.helmet + " " + String.valueOf(GD.Score) + " "+ String.valueOf(GD.CoinsC) +".ser";
+        String dir = System.getProperty("user.dir");
+        String dest = dir+File.separator+"save games";
+        File FTL = new File(dest);
+        String[] saves = FTL.list();
+
+        String st = "GAME" + saves.length +".ser";
         FileOutputStream fileout = new FileOutputStream(st);
         ObjectOutputStream out = new ObjectOutputStream(fileout);
         out.writeObject(GD);
@@ -392,7 +397,6 @@ class Game implements Serializable{
 
         String fileS = "";
         String fileD = "";
-        String dir = System.getProperty("user.dir");
 
         fileS = dir+File.separator+st;
         fileD = dir+File.separator+"save games"+File.separator+st;
