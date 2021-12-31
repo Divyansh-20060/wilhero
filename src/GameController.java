@@ -1,5 +1,6 @@
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
@@ -74,9 +76,15 @@ class islands extends gameobjcts {
 }
 
 class Orc extends gameobjcts{
+	public RotateTransition die_Rotate;
+	public TranslateTransition die_Fall;
+	
 	public Timeline down_Timeline;
 	public Timeline up_Timeline;
 	public Timeline right_Timeline;
+	
+
+	
     public Orc (double x, double y){
         String orcT[] = {"Orc1.png","RedOrc1.png"};
         Random rand = new Random();
@@ -85,6 +93,21 @@ class Orc extends gameobjcts{
         Node.setLayoutX(x);
         Node.setLayoutY(y);
     }
+	public void play_Die_Rotate() {
+		this.die_Rotate.play();
+	}
+	
+	public void play_Die_Fall() {
+		this.die_Fall.play();
+	}
+    
+    public void setDie_Rotate(RotateTransition die_Rotate) {
+    	this.die_Rotate = die_Rotate;
+    }
+    public void setDie_Fall(TranslateTransition die_Fall) {
+    	this.die_Fall = die_Fall;
+    }
+    
     public void setDown_Timeline(Timeline down_Timeline){
     	this.down_Timeline = down_Timeline;
     }
@@ -95,18 +118,20 @@ class Orc extends gameobjcts{
     	this.right_Timeline = right_Timeline;
     }
     
-    
+
 
     
 }
 
 class Hero extends gameobjcts{
+	Hammer hammer;
 	Timeline up_Timeline;
 	Timeline down_Timeline;
 	Timeline right_Timeline;
 	Timeline left_Timeline;
 	
     public Hero(String st){
+    	hammer = new Hammer(110, 180);
         Node = new ImageView(st);
         Node.setLayoutX(60);
         Node.setLayoutY(200);
@@ -128,6 +153,24 @@ class Hero extends gameobjcts{
     
     
 }
+class Hammer extends gameobjcts{
+	
+	RotateTransition rotate_ani;
+	ImageView Node;
+	Hammer(double x , double y){
+		
+		
+
+		
+		
+		Node = new ImageView("WeaponSword2.png");
+		Node.setLayoutX(x);
+		Node.setLayoutY(y);
+	}
+	public void rot() {
+		this.rotate_ani.play();
+	}
+}
 
 class Coin extends gameobjcts{
     public Coin(double x, double y){
@@ -148,6 +191,7 @@ class Game implements Serializable{
     public ArrayList<Coin> Coins = new ArrayList<Coin>();
     public Game(String st){
         hero = new Hero(st);
+        ;
         
         islands i1 = new islands(40,300);
         Islands.add(i1);
@@ -219,6 +263,13 @@ class Game implements Serializable{
         Islands.add(i);
         if (OV){
             Orc orc = new Orc(i.Node.getLayoutX() + 90,i.Node.getLayoutY() - 55);
+            
+
+            
+            
+            
+            
+            
             
             Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
                 @Override
@@ -590,6 +641,8 @@ public class GameController implements Initializable,Serializable{
         			G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
         		
         		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 1);
+        		G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() + 1 );
+        		
         		for (int i = 0; i < G1.Coins.size(); i++) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
         				
@@ -624,6 +677,7 @@ public class GameController implements Initializable,Serializable{
         public void handle(ActionEvent event) {
         	if ( G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
         	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 1);
+        	G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() - 1 );
     		for (int i = 0; i < G1.Coins.size(); i++) {
     			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
     				
@@ -685,10 +739,14 @@ public class GameController implements Initializable,Serializable{
             /////////clean code starts
 
         	
-
+        	GD.Score = -(int)(G1.Islands.get(0).Node.getLayoutX() / 200);
+    		Score.setText(String.valueOf(GD.Score));
+    		
         	if (G1.hero.Node.getLayoutX() >= 60 && G1.hero.Node.getLayoutX() <= 250) {
 
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
+        		G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() - 1 );
+        		
         		for (int i = 0; i < G1.Islands.size(); i++) {
         			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() - 1 );
         		}
@@ -704,6 +762,8 @@ public class GameController implements Initializable,Serializable{
         	}
         	else if(G1.hero.Node.getLayoutX() >250) {
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
+        		G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() - 1 );
+        		
         		for (int i = 0; i < G1.Islands.size(); i++) {
         			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -1.8 );
         		}
@@ -741,6 +801,7 @@ public class GameController implements Initializable,Serializable{
         	if (G1.hero.Node.getLayoutX() <= 250) {
         		if (true) {
         			G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 1);
+        			G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() + 1 );
         		}
         		for (int i = 0; i < G1.Coins.size(); i++) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
@@ -765,6 +826,32 @@ public class GameController implements Initializable,Serializable{
                     
 
                 }
+                
+                for (int i = 0; i < G1.Orcs.size(); i++) {
+                	if ( ( Math.pow((G1.hero.Node.getBoundsInParent().getMaxX() - G1.Orcs.get(i).Node.getBoundsInParent().getMinX()),2) + Math.pow((G1.hero.Node.getBoundsInParent().getCenterY() - G1.Orcs.get(i).Node.getBoundsInParent().getCenterY()),2) ) <= 5000) {
+                		if (G1.hero.hammer.rotate_ani.getStatus() != Animation.Status.RUNNING) {
+//                			G1.hero.hammer.rotate_ani.play();
+                			G1.hero.hammer.rot();
+                			G1.Orcs.get(i).down_Timeline.stop();
+                			G1.Orcs.get(i).up_Timeline.stop();
+                			G1.Orcs.get(i).right_Timeline.stop();
+                			
+                			if(G1.Orcs.get(i).die_Rotate.getStatus() != Animation.Status.RUNNING) {
+                				G1.Orcs.get(i).play_Die_Rotate();
+                			}
+                			
+                			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
+                				G1.Orcs.get(i).play_Die_Fall();
+                			}
+                			
+                			
+                			//orc_down
+                			//orc_rotate
+                		}
+                	}
+                }
+
+                
         	}	
         	
         }
@@ -851,7 +938,18 @@ public class GameController implements Initializable,Serializable{
     	if(!hasStarted) {
 
             G1 = new Game(GD.helmet);
+            anchorPane.getChildren().addAll(G1.hero.hammer.Node);
             anchorPane.getChildren().addAll(G1.hero.Node);
+            
+    		G1.hero.hammer.rotate_ani = new RotateTransition();
+    		G1.hero.hammer.rotate_ani.setNode(G1.hero.hammer.Node);
+    		G1.hero.hammer.rotate_ani.setDuration(Duration.millis(300));
+    		G1.hero.hammer.rotate_ani.setCycleCount(2);
+    		G1.hero.hammer.rotate_ani.setAutoReverse(true);
+    		G1.hero.hammer.rotate_ani.setInterpolator(Interpolator.LINEAR);
+    		G1.hero.hammer.rotate_ani.setByAngle(360);
+    		G1.hero.hammer.rotate_ani.setAxis(Rotate.Z_AXIS);
+            
             System.out.println(G1.hero.Node.getImage());
 
 
@@ -860,7 +958,26 @@ public class GameController implements Initializable,Serializable{
             }
 
             for (int i = 0; i<G1.Orcs.size();i++){
+            	
                 anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
+                
+                G1.Orcs.get(i).die_Rotate = new RotateTransition();
+                G1.Orcs.get(i).die_Rotate.setNode(G1.Orcs.get(i).Node);
+                G1.Orcs.get(i).die_Rotate.setDuration(Duration.millis(1000));
+                G1.Orcs.get(i).die_Rotate.setCycleCount(1);
+                G1.Orcs.get(i).die_Rotate.setInterpolator(Interpolator.LINEAR);
+                G1.Orcs.get(i).die_Rotate.setByAngle(360);
+                G1.Orcs.get(i).die_Rotate.setAxis(Rotate.Z_AXIS);
+                
+                G1.Orcs.get(i).die_Fall = new TranslateTransition(); 
+                
+                G1.Orcs.get(i).die_Fall.setNode(G1.Orcs.get(i).Node);
+                G1.Orcs.get(i).die_Fall.setDuration(Duration.millis(1000));
+                G1.Orcs.get(i).die_Fall.setCycleCount(1);
+//                G1.Orcs.get(i).die_Fall.setInterpolator(Interpolator.LINEAR);
+                G1.Orcs.get(i).die_Fall.setToY(1000);
+                
+                
             }
 
             for (int i = 0; i<G1.Coins.size();i++){
@@ -911,8 +1028,6 @@ public class GameController implements Initializable,Serializable{
 
     public void onDashButtonClick(ActionEvent event){
         if(DT){
-//            GD.Score++;
-//            Score.setText(String.valueOf(GD.Score));
             if (!G1.isPaused ) {
             	Dash();
             }

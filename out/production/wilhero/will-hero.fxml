@@ -104,7 +104,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <Label fx:id="Score" layoutX="741.0" layoutY="455.0" prefHeight="55.0" prefWidth="106.0" text="0" textFill="RED">
+      <Label fx:id="Score" layoutX="741.0" layoutY="455.0" prefHeight="71.0" prefWidth="186.0" text="0" textFill="RED">
          <font>
             <Font name="Candara Light" size="58.0" />
          </font>
