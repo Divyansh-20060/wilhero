@@ -965,7 +965,7 @@ public class GameController implements Initializable,Serializable{
     }
 }
 
-
+//yes
 //min y = 100
 //max y = 450
 //shift x = 300
