@@ -230,7 +230,9 @@ class Game implements Serializable{
                 		
                 		 if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                 				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
-                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
+                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
+                				(hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
+                				(hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
                 				  )  {
                 			
                 			//hero hits the side of orc
@@ -267,10 +269,10 @@ class Game implements Serializable{
                 		else if (hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
                 				(hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
                 				(hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
-                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinY() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
+                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
                 				) {
-                			
+                			orc.down_Timeline.stop();
                 			pauseGame(); 
                 			
                 		}
@@ -301,7 +303,10 @@ class Game implements Serializable{
                     	
                 		if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                 				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
-                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
+                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
+                				(hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
+                				(hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
+                				  
                 				    )  {
                 			
                 			//hero hits the side of orc
@@ -332,10 +337,10 @@ class Game implements Serializable{
                 		else if (hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
                 				(hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
                 				(hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
-                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinY() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
+                				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
                 				) {
-                			
+                			orc.up_Timeline.stop();
                 			pauseGame();
                 			
                 		}
@@ -353,7 +358,52 @@ class Game implements Serializable{
                 	
                 	orc.Node.setLayoutX(orc.Node.getLayoutX() + 1.5);
                 	
-                	orc.right_Timeline.setOnFinished(t -> orc.down_Timeline.play());
+//                	orc.right_Timeline.setOnFinished(t -> orc.down_Timeline.play());
+                	if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+            				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
+            				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
+            				(hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
+            				(hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
+            				  
+            				    )  {
+            			
+            			//hero hits the side of orc
+            			hero.right_Timeline.stop();
+            			hero.down_Timeline.play();
+            			
+            			orc.right_Timeline.setCycleCount(120);
+            			orc.right_Timeline.play();
+            		}
+
+                	else if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+            				(hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
+            				(hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
+            				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
+            				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
+            				 ) {
+            			
+            			//hero hits the top of orc
+            	    	hero.up_Timeline.setCycleCount(90);
+            	    	if(hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
+            	    		hero.up_Timeline.play();
+                	    }
+            	    	orc.up_Timeline.stop();
+            	    	orc.down_Timeline.play();
+            	    	hero.up_Timeline.setOnFinished(e -> hero.down_Timeline.play());	
+            		}
+
+            		else if (hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+            				(hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
+            				(hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
+            				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
+            				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
+            				) {
+            			orc.right_Timeline.stop();
+            			pauseGame();
+            			
+            		}
+
+                	
                 }
             }
             ));
