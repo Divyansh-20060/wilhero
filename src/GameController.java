@@ -191,7 +191,7 @@ class Game implements Serializable{
     public ArrayList<Coin> Coins = new ArrayList<Coin>();
     public Game(String st){
         hero = new Hero(st);
-        ;
+        
         
         islands i1 = new islands(40,300);
         Islands.add(i1);
@@ -204,41 +204,55 @@ class Game implements Serializable{
     	this.isPaused = true;
     	
     	
-    	
-    	hero.up_Timeline.pause();
-    	hero.down_Timeline.pause();
-    	hero.right_Timeline.pause();
-    	hero.left_Timeline.pause();
+    	if (hero.up_Timeline != null) {
+    		hero.up_Timeline.pause();
+    	}
+    	if(hero.down_Timeline != null) {
+    		hero.down_Timeline.pause();
+    	}
+    	if(hero.right_Timeline != null) {
+    		hero.right_Timeline.pause();
+    	}
+    	if(hero.left_Timeline != null) {
+    		hero.left_Timeline.pause();
+    	}
     	for (int i = 0; i < Orcs.size(); i++) {
-    		Orcs.get(i).down_Timeline.pause();
-    		Orcs.get(i).up_Timeline.pause();
-    		Orcs.get(i).right_Timeline.pause();
+    		if(Orcs.get(i).down_Timeline != null) {
+    			Orcs.get(i).down_Timeline.pause();
+    		}
+    		if(Orcs.get(i).up_Timeline != null) {
+    			Orcs.get(i).up_Timeline.pause();
+    		}
+    		if(Orcs.get(i).right_Timeline != null) {
+    			Orcs.get(i).right_Timeline.pause();
+    		}
     	}
     }
     
     public void resumeGame() {
     	this.isPaused = false;
-    	if (hero.up_Timeline.getStatus() == Animation.Status.PAUSED) {
+    	
+    	if (hero.up_Timeline != null &&  hero.up_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.up_Timeline.play();
     	}
-    	if (hero.down_Timeline.getStatus() == Animation.Status.PAUSED) {
+    	if (hero.down_Timeline != null &&  hero.down_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.down_Timeline.play();
     	}
-    	if (hero.right_Timeline.getStatus() == Animation.Status.PAUSED) {
+    	if (hero.right_Timeline != null &&  hero.right_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.right_Timeline.play();
     	}
-    	if (hero.left_Timeline.getStatus() == Animation.Status.PAUSED) {
+    	if (hero.left_Timeline != null &&  hero.left_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.left_Timeline.play();
     	}
     	for (int i = 0; i < Orcs.size(); i++) {
-    		if (Orcs.get(i).down_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		if (Orcs.get(i).down_Timeline != null && Orcs.get(i).down_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).down_Timeline.play();
     		}
-    		if (Orcs.get(i).up_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		if (Orcs.get(i).up_Timeline != null &&  Orcs.get(i).up_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).up_Timeline.play();
     		}
     		
-    		if (Orcs.get(i).right_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		if (Orcs.get(i).right_Timeline != null &&  Orcs.get(i).right_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).right_Timeline.play();
     		}
     	}
