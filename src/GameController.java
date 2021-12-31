@@ -21,15 +21,40 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import javafx.animation.ScaleTransition;
 import javafx.animation.Interpolator;
 
 
-class game_data{
+class game_data implements Serializable{
     public String helmet = "hero.png";
     public int Score = 0;
+    public ArrayList<double[]> Island_P = new ArrayList<double[]>();
+    public ArrayList<double[]> Orc_P = new ArrayList<double[]>();
+    public ArrayList<double[]> Coin_P = new ArrayList<double[]>();
+    public double[] Hero_P = {0,0};
+    public int CoinsC = 0;
+    public void CopyData (Game G1){
+        for(int i = 0; i < G1.Islands.size(); i++){
+            double[] P = {G1.Islands.get(i).Node.getLayoutX(),G1.Islands.get(i).Node.getLayoutY()};
+            Island_P.add(P);
+        }
+
+        for(int i = 0; i < G1.Orcs.size(); i++){
+            double[] P = {G1.Orcs.get(i).Node.getLayoutX(),G1.Orcs.get(i).Node.getLayoutY()};
+            Orc_P.add(P);
+        }
+
+        for(int i = 0; i < G1.Coins.size(); i++){
+            double[] P = {G1.Coins.get(i).Node.getLayoutX(),G1.Coins.get(i).Node.getLayoutY()};
+            Coin_P.add(P);
+        }
+
+        Hero_P[0] = G1.hero.Node.getLayoutX();
+        Hero_P[1] = G1.hero.Node.getLayoutY();
+    }
 }
 
 class gameobjcts{
@@ -354,31 +379,30 @@ class Game implements Serializable{
         //return i;
     }
 
-    public void save(Game G1) throws IOException {
-        isl[0] = 200;
-        isl[1] = 200;
-        String st = "GAME34.ser";
+    public void save(game_data GD,int i) throws IOException{
+        GD.CopyData(this);
+        String st = "GAME" + String.valueOf(i) +".ser";
         FileOutputStream fileout = new FileOutputStream(st);
         ObjectOutputStream out = new ObjectOutputStream(fileout);
-        out.writeObject(G1.isl);
+        out.writeObject(GD);
         out.close();
         fileout.close();
         System.out.println("Saved!");
     }
 
-    public int[] load() throws IOException, ClassNotFoundException {
-        int g1[] = null;
-        FileInputStream filein = new FileInputStream("GAME34.ser");
+    public game_data load(String st) throws IOException, ClassNotFoundException {
+        game_data gd = null;
+        FileInputStream filein = new FileInputStream(st);
         ObjectInputStream in = new ObjectInputStream(filein);
-        g1 = (int[]) in.readObject();
+        gd = (game_data) in.readObject();
         in.close();
         filein.close();
         System.out.println("loaded");
-        return g1;
+        return gd;
     }
 }
 
-public class GameController implements Initializable{
+public class GameController implements Initializable,Serializable{
 
     @FXML
     private Label Score;
@@ -386,7 +410,7 @@ public class GameController implements Initializable{
     @FXML
     private ImageView coinIcon;
 
-//  HELMET CHANGING
+////////////////HELMET CHANGING NODES////////////////////////////
     @FXML
     private ImageView h1;
 
@@ -404,7 +428,7 @@ public class GameController implements Initializable{
 
     @FXML
     private Button Helmet;
-//  HELMET CHANGING
+/////////////////////////  HELMET CHANGING NODES////////////////////////////
 	
 	@FXML
     private Label coinCounter;
@@ -437,20 +461,13 @@ public class GameController implements Initializable{
     public TranslateTransition transition = new TranslateTransition();
 
     private boolean DT = false;
+    public int NSAVES = 0;
     public game_data GD = new game_data();
     
-    public void onPauseClick() {
-    	G1.pauseGame();
-    }
-    
-    public void onResumeClick() {
-    	
-    	G1.resumeGame();
-    	
-    }
+
     	
     
-    //HELMET CHANGING
+    //////////////////////////////////HELMET CHANGING////////////////////////////////////////////////////////////////
     public void onH1click(){
         if (GD.helmet != "hero.png"){
             GD.helmet = "hero.png";
@@ -482,13 +499,11 @@ public class GameController implements Initializable{
     }
 
     public void CancelB(){
-        System.out.println("h1");
         helmets.setDisable(true);
-        System.out.println("h2");
         helmets.setVisible(false);
     }
 
-    //HELMET CHANGING
+    /////////////////////////////////////ANIMATION TIMELINES///////////////////////////////////////////////////////////
 
     Timeline T1 = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
         
@@ -654,8 +669,9 @@ public class GameController implements Initializable{
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
         				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
         				G1.Coins.remove(i);
-        				G1.coinsCollected++;
-        				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+        				GD.CoinsC++;
+                        int p = GD.CoinsC;
+        				coinCounter.setText(String.valueOf(p));
         				
         			}
         		}
@@ -742,6 +758,18 @@ public class GameController implements Initializable{
     	
     }
 
+    ///////////////////////////////////////BUTTON ASSIGNMENTS//////////////////////////////////////////////////////////
+
+    public void onPauseClick() {
+        G1.pauseGame();
+    }
+
+    public void onResumeClick() {
+
+        G1.resumeGame();
+
+    }
+
     public void onStartButtonClick() {
     	if(!hasStarted) {
 
@@ -789,11 +817,20 @@ public class GameController implements Initializable{
     }
 
     public void onSaveB(ActionEvent event) throws IOException {
-        G1.save(G1);
+        G1.save(GD,NSAVES + 1);
         System.out.println("SAVED!");
+        for(int i = 0 ; i < G1.Islands.size(); i++){
+            System.out.println("---------------" +"\n");
+
+            System.out.println(G1.Islands.get(i).Node.getLayoutX());
+            System.out.println(GD.Island_P.get(i)[0]);
+
+        }
+        NSAVES++;
     }
 
-    public void onQuitButtonClick (){
+    public void onQuitButtonClick () throws IOException {
+        SaveVALSave();
         System.exit(0);
     }
 
@@ -808,14 +845,104 @@ public class GameController implements Initializable{
     }
 
     public void onLoadB() throws IOException, ClassNotFoundException {
+        System.out.println("Choose save file" + "\n");
+        for (int i =0; i < NSAVES; i++ ){
+            System.out.println("GAME"+String.valueOf(i + 1)+"\n");
+        }
+        Scanner sc = new Scanner(System.in);
+        String st = sc.nextLine();
+        GD = G1.load(st +".ser");
 
-        G1.isl = G1.load();
-        G1.Islands.get(0).Node.setLayoutX(G1.isl[0]);
-        G1.Islands.get(0).Node.setLayoutY(G1.isl[1]);
+        if(GD.Island_P.size() > G1.Islands.size()){
+            while (GD.Island_P.size() > G1.Islands.size()){
+                islands is = new islands(0,0);
+                G1.Islands.add(is);
+            }
+        }
+
+        else if (GD.Island_P.size() < G1.Islands.size()){
+            while(GD.Island_P.size() < G1.Islands.size()){
+                G1.Islands.remove(G1.Islands.size() -1 );
+            }
+        }
+
+        if(GD.Orc_P.size() > G1.Orcs.size()){
+            while(GD.Orc_P.size() > G1.Orcs.size()){
+                Orc or = new Orc(0,0);
+                G1.Orcs.add(or);
+            }
+        }
+
+        else if (GD.Orc_P.size() < G1.Orcs.size()){
+            while(GD.Orc_P.size() < G1.Orcs.size()){
+                G1.Orcs.remove(G1.Orcs.size() -1);
+            }
+        }
+
+        if(GD.Coin_P.size() > G1.Coins.size()){
+            while(GD.Coin_P.size() > G1.Coins.size()){
+                Coin coin = new Coin(0,0);
+                G1.Coins.add(coin);
+            }
+        }
+
+        else if (GD.Coin_P.size() < G1.Coins.size()){
+            while (GD.Coin_P.size() < G1.Coins.size()){
+                G1.Coins.remove(G1.Coins.size() - 1);
+            }
+        }
+
+        for(int i = 0; i < G1.Islands.size(); i++){
+            G1.Islands.get(i).Node.setLayoutX(GD.Island_P.get(i)[0]);
+            G1.Islands.get(i).Node.setLayoutY(GD.Island_P.get(i)[1]);
+        }
+
+        for(int i = 0; i < G1.Orcs.size(); i++){
+            G1.Orcs.get(i).Node.setLayoutX(GD.Orc_P.get(i)[0]);
+            G1.Orcs.get(i).Node.setLayoutY(GD.Orc_P.get(i)[1]);
+        }
+
+        for(int i = 0; i < G1.Coins.size(); i++){
+            G1.Coins.get(i).Node.setLayoutX(GD.Coin_P.get(i)[0]);
+            G1.Coins.get(i).Node.setLayoutY(GD.Coin_P.get(i)[1]);
+        }
+        G1.hero.Node.setLayoutX(GD.Hero_P[0]);
+        G1.hero.Node.setLayoutY(GD.Hero_P[1]);
+        int p = GD.CoinsC;
+        coinCounter.setText(String.valueOf(p));
+    }
+
+    public int LoadNSaves() throws IOException, ClassNotFoundException {
+        int gd = 0;
+        FileInputStream filein = new FileInputStream("NSave.ser");
+        ObjectInputStream in = new ObjectInputStream(filein);
+        gd = (int) in.readObject();
+        in.close();
+        filein.close();
+        System.out.println("loaded saves");
+        return gd;
+    }
+
+    public void SaveVALSave() throws IOException {
+        String st = "NSave.ser";
+        FileOutputStream fileout = new FileOutputStream(st);
+        ObjectOutputStream out = new ObjectOutputStream(fileout);
+        out.writeObject(NSAVES);
+        out.close();
+        fileout.close();
+        System.out.println("Saved!");
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize (URL url, ResourceBundle resourceBundle) {
+        try {
+            NSAVES = LoadNSaves();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(NSAVES);
 //        anchorPane.getChildren().addAll(G1.hero.Node);
 //        System.out.println(G1.hero.Node.getImage());
 //
