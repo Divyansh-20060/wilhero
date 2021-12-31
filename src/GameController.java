@@ -18,6 +18,8 @@ import javafx.fxml.Initializable;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -379,18 +381,32 @@ class Game implements Serializable{
         //return i;
     }
 
-    public void save(game_data GD,int i) throws IOException{
+    public void save(game_data GD) throws IOException{
         GD.CopyData(this);
-        String st = "GAME" + String.valueOf(i) +".ser";
+        String st = "GAME " + GD.helmet + " " + String.valueOf(GD.Score) + " "+ String.valueOf(GD.CoinsC) +".ser";
         FileOutputStream fileout = new FileOutputStream(st);
         ObjectOutputStream out = new ObjectOutputStream(fileout);
         out.writeObject(GD);
         out.close();
         fileout.close();
+
+        String fileS = "";
+        String fileD = "";
+        String dir = System.getProperty("user.dir");
+
+        fileS = dir+File.separator+st;
+        fileD = dir+File.separator+"save games"+File.separator+st;
+        File Sourcefile = new File(fileS);
+        File Destinationfile = new File(fileD);
+
+        Files.copy(Sourcefile.toPath(),Destinationfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Sourcefile.delete();
         System.out.println("Saved!");
     }
 
     public game_data load(String st) throws IOException, ClassNotFoundException {
+
+
         game_data gd = null;
         FileInputStream filein = new FileInputStream(st);
         ObjectInputStream in = new ObjectInputStream(filein);
@@ -461,7 +477,7 @@ public class GameController implements Initializable,Serializable{
     public TranslateTransition transition = new TranslateTransition();
 
     private boolean DT = false;
-    public int NSAVES = 0;
+    //public int NSAVES = 0;
     public game_data GD = new game_data();
     
 
@@ -817,7 +833,7 @@ public class GameController implements Initializable,Serializable{
     }
 
     public void onSaveB(ActionEvent event) throws IOException {
-        G1.save(GD,NSAVES + 1);
+        G1.save(GD);
         System.out.println("SAVED!");
         for(int i = 0 ; i < G1.Islands.size(); i++){
             System.out.println("---------------" +"\n");
@@ -826,11 +842,9 @@ public class GameController implements Initializable,Serializable{
             System.out.println(GD.Island_P.get(i)[0]);
 
         }
-        NSAVES++;
     }
 
     public void onQuitButtonClick () throws IOException {
-        SaveVALSave();
         System.exit(0);
     }
 
@@ -845,13 +859,23 @@ public class GameController implements Initializable,Serializable{
     }
 
     public void onLoadB() throws IOException, ClassNotFoundException {
-        System.out.println("Choose save file" + "\n");
-        for (int i =0; i < NSAVES; i++ ){
-            System.out.println("GAME"+String.valueOf(i + 1)+"\n");
+
+        String fileS = "";
+        String dir = System.getProperty("user.dir");
+
+        fileS = dir+File.separator+"save games";
+        File saveL = new File(fileS);
+
+        System.out.println("Choose Save file" + "\n");
+        String[] saves = saveL.list();
+        for(int i = 0; i<saves.length; i++){
+            System.out.println(saves[i]);
         }
+
         Scanner sc = new Scanner(System.in);
         String st = sc.nextLine();
-        GD = G1.load(st +".ser");
+        fileS = fileS + File.separator + st;
+        GD = G1.load(fileS);
 
         if(GD.Island_P.size() > G1.Islands.size()){
             while (GD.Island_P.size() > G1.Islands.size()){
@@ -912,37 +936,11 @@ public class GameController implements Initializable,Serializable{
         coinCounter.setText(String.valueOf(p));
     }
 
-    public int LoadNSaves() throws IOException, ClassNotFoundException {
-        int gd = 0;
-        FileInputStream filein = new FileInputStream("NSave.ser");
-        ObjectInputStream in = new ObjectInputStream(filein);
-        gd = (int) in.readObject();
-        in.close();
-        filein.close();
-        System.out.println("loaded saves");
-        return gd;
-    }
 
-    public void SaveVALSave() throws IOException {
-        String st = "NSave.ser";
-        FileOutputStream fileout = new FileOutputStream(st);
-        ObjectOutputStream out = new ObjectOutputStream(fileout);
-        out.writeObject(NSAVES);
-        out.close();
-        fileout.close();
-        System.out.println("Saved!");
-    }
 
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
-        try {
-            NSAVES = LoadNSaves();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println(NSAVES);
+
 //        anchorPane.getChildren().addAll(G1.hero.Node);
 //        System.out.println(G1.hero.Node.getImage());
 //
