@@ -38,6 +38,10 @@ class game_data implements Serializable{
     public ArrayList<double[]> Island_P = new ArrayList<double[]>();
     public ArrayList<double[]> Orc_P = new ArrayList<double[]>();
     public ArrayList<double[]> Coin_P = new ArrayList<double[]>();
+    public ArrayList<double[]> Chest_p = new ArrayList<double[]>();
+    public ArrayList<double[]> Falling_p = new ArrayList<double[]>();
+    public double[] Sword = {0,0};
+    public double[] Boss = {0,0};
     public double[] Hero_P = {0,0};
     public int CoinsC = 0;
     public void CopyData (Game G1){
@@ -56,6 +60,22 @@ class game_data implements Serializable{
             Coin_P.add(P);
         }
 
+        for(int i = 0; i< G1.Chests.size(); i++){
+            double[] p = {G1.Chests.get(i).Node.getLayoutX(),G1.Chests.get(i).Node.getLayoutY(),G1.Chests.get(i).Drop};
+            Chest_p.add(p);
+        }
+
+        for(int i = 0; i < G1.FS_L.size(); i++){
+            double[] p = {G1.FS_L.get(i).Node.getLayoutX(),G1.FS_L.get(i).Node.getLayoutY()};
+            Falling_p.add(p);
+        }
+
+        Boss[0] = G1.boss.Node.getLayoutX();
+        Boss[1] = G1.boss.Node.getLayoutY();
+
+        Sword[0] = G1.hero.hammer.Node.getLayoutX();
+        Sword[1] = G1.hero.hammer.Node.getLayoutY();
+
         Hero_P[0] = G1.hero.Node.getLayoutX();
         Hero_P[1] = G1.hero.Node.getLayoutY();
     }
@@ -72,6 +92,14 @@ class islands extends gameobjcts {
         Node = new ImageView("island.png");
         Node.setLayoutX(x);
         Node.setLayoutY(y);
+    }
+}
+class Falling_Step extends gameobjcts{
+    public Falling_Step(double x,double y){
+        Node = new ImageView("FallingStep.png");
+        Node.setLayoutX(x);
+        Node.setLayoutY(y);
+
     }
 }
 
@@ -122,9 +150,30 @@ class Orc extends gameobjcts{
 
     
 }
+class Boss extends gameobjcts{
+    public Boss(double x, double y){
+        Node = new ImageView("OrcBoss.png");
+        Node.setLayoutX(x);
+        Node.setLayoutY(y);
+    }
+}
+
+class Chest extends gameobjcts{
+    public int Drop;
+
+    public Chest(double x, double y){
+        Random rand = new Random();
+        int drop = rand.nextInt(3);
+        Node = new ImageView("ChestClosed.png");
+        Node.setLayoutX(x);
+        Node.setLayoutY(y);
+        Drop = drop;
+    }
+}
 
 class Hero extends gameobjcts{
 	Hammer hammer;
+
 	Timeline up_Timeline;
 	Timeline down_Timeline;
 	Timeline right_Timeline;
@@ -185,10 +234,14 @@ class Game implements Serializable{
     public int[] isl = {0,0};
     public int coinsCollected;
     public Hero hero;
+    public Boss boss;
     
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public ArrayList<Orc> Orcs = new ArrayList<Orc>();
     public ArrayList<Coin> Coins = new ArrayList<Coin>();
+    public ArrayList<Chest> Chests = new ArrayList<Chest>();
+    public ArrayList<Falling_Step> FS_L = new ArrayList<Falling_Step>();
+
     public Game(String st){
         hero = new Hero(st);
         
@@ -198,6 +251,20 @@ class Game implements Serializable{
         for (int i = 0; i<49;i++){
         IslandSpawner();
         }
+
+        for(int i = 0; i<5;i++){
+            Random rand = new Random();
+            int Is = rand .nextInt(50);
+            ChestSpawner(Islands.get(Is).Node.getLayoutX()+100,Islands.get(Is).Node.getLayoutY() - 55);
+        }
+
+        BossSpawner();
+
+    }
+
+    public void ChestSpawner(double x, double y){
+        Chest c = new Chest(x,y);
+        Chests.add(c);
     }
     
     public void pauseGame() {
@@ -501,6 +568,20 @@ class Game implements Serializable{
         }
 
         //return i;
+    }
+
+    public void BossSpawner(){
+        double y = Islands.get(Islands.size() - 1).Node.getLayoutY();
+        double x = Islands.get(Islands.size() - 1).Node.getLayoutX() + 250;
+
+        for(int i = 0; i<18; i++){
+            Falling_Step FS = new Falling_Step(x,y);
+            FS_L.add(FS);
+            x = x+79;
+        }
+        islands I = new islands(x + 126,y);
+        boss = new Boss( FS_L.get(9).Node.getLayoutX() , y - 150);
+
     }
 
     public void save(game_data GD) throws IOException{
@@ -955,7 +1036,11 @@ public class GameController implements Initializable,Serializable{
 
             G1 = new Game(GD.helmet);
             anchorPane.getChildren().addAll(G1.hero.hammer.Node);
-            anchorPane.getChildren().addAll(G1.hero.Node);
+            anchorPane.getChildren().addAll(G1.hero.Node,G1.boss.Node);
+
+            for(int i = 0; i < G1.FS_L.size(); i++){
+            anchorPane.getChildren().addAll(G1.FS_L.get(i).Node);
+            }
             
     		G1.hero.hammer.rotate_ani = new RotateTransition();
     		G1.hero.hammer.rotate_ani.setNode(G1.hero.hammer.Node);
@@ -971,6 +1056,10 @@ public class GameController implements Initializable,Serializable{
 
             for (int i = 0; i<G1.Islands.size();i++){
                 anchorPane.getChildren().addAll(G1.Islands.get(i).Node);
+            }
+
+            for (int i = 0; i<G1.Chests.size();i++){
+                anchorPane.getChildren().addAll(G1.Chests.get(i).Node);
             }
 
             for (int i = 0; i<G1.Orcs.size();i++){
@@ -1341,6 +1430,24 @@ public class GameController implements Initializable,Serializable{
             G1.Coins.get(i).Node.setLayoutX(GD.Coin_P.get(i)[0]);
             G1.Coins.get(i).Node.setLayoutY(GD.Coin_P.get(i)[1]);
         }
+
+        for(int i = 0; i < G1.Chests.size(); i++){
+            G1.Chests.get(i).Node.setLayoutX(GD.Chest_p.get(i)[0]);
+            G1.Chests.get(i).Node.setLayoutY(GD.Chest_p.get(i)[1]);
+            G1.Chests.get(i).Drop = (int) GD.Chest_p.get(i)[2];
+        }
+
+        for(int i = 0; i< G1.FS_L.size(); i++){
+            G1.FS_L.get(i).Node.setLayoutX(GD.Falling_p.get(i)[0]);
+            G1.FS_L.get(i).Node.setLayoutY(GD.Falling_p.get(i)[1]);
+        }
+
+        G1.boss.Node.setLayoutX(GD.Boss[0]);
+        G1.boss.Node.setLayoutY(GD.Boss[1]);
+
+        G1.hero.hammer.Node.setLayoutX(GD.Sword[0]);
+        G1.hero.hammer.Node.setLayoutY(GD.Sword[1]);
+
         G1.hero.Node.setLayoutX(GD.Hero_P[0]);
         G1.hero.Node.setLayoutY(GD.Hero_P[1]);
         int p = GD.CoinsC;
