@@ -1283,6 +1283,24 @@ public class GameController implements Initializable,Serializable{
                 orc.down_Timeline.pause();
                 orc.up_Timeline.pause();
                 orc.right_Timeline.pause();
+                
+                anchorPane.getChildren().addAll(orc.Node);
+                
+                orc.die_Rotate = new RotateTransition();
+                orc.die_Rotate.setNode(orc.Node);
+                orc.die_Rotate.setDuration(Duration.millis(1000));
+                orc.die_Rotate.setCycleCount(1);
+                orc.die_Rotate.setInterpolator(Interpolator.LINEAR);
+                orc.die_Rotate.setByAngle(360);
+                orc.die_Rotate.setAxis(Rotate.Z_AXIS);
+                
+                orc.die_Fall = new TranslateTransition(); 
+                
+                orc.die_Fall.setNode(orc.Node);
+                orc.die_Fall.setDuration(Duration.millis(1000));
+                orc.die_Fall.setCycleCount(1);
+//                G1.Orcs.get(i).die_Fall.setInterpolator(Interpolator.LINEAR);
+                orc.die_Fall.setToY(1000);
                
                 
                 G1.Orcs.add(orc);
