@@ -159,6 +159,8 @@ class Boss extends gameobjcts{
 }
 
 class Chest extends gameobjcts{
+	boolean isOpen;
+	
     public int Drop;
 
     public Chest(double x, double y){
@@ -173,14 +175,15 @@ class Chest extends gameobjcts{
 
 class Hero extends gameobjcts{
 	Hammer hammer;
-
+	Shuriken shuriken;
+	
 	Timeline up_Timeline;
 	Timeline down_Timeline;
 	Timeline right_Timeline;
 	Timeline left_Timeline;
 	
     public Hero(String st){
-    	hammer = new Hammer(110, 180);
+//    	hammer = new Hammer(110, 180);
         Node = new ImageView(st);
         Node.setLayoutX(60);
         Node.setLayoutY(200);
@@ -202,16 +205,30 @@ class Hero extends gameobjcts{
     
     
 }
+
+class Shuriken extends gameobjcts{
+	boolean isEquiped;
+	int level;
+	RotateTransition rotate_ani;
+	TranslateTransition trans_ani;
+	ImageView Node;
+	Shuriken(double x , double y){
+		Node = new ImageView("WeaponAxe1.png");
+		Node.setLayoutX(x);
+		Node.setLayoutY(y);
+	}
+	public void rot() {
+		this.rotate_ani.play();
+		this.trans_ani.play();
+	}
+}
+
 class Hammer extends gameobjcts{
-	
+	boolean isEquiped;
+	int level;
 	RotateTransition rotate_ani;
 	ImageView Node;
 	Hammer(double x , double y){
-		
-		
-
-		
-		
 		Node = new ImageView("WeaponSword2.png");
 		Node.setLayoutX(x);
 		Node.setLayoutY(y);
@@ -244,7 +261,10 @@ class Game implements Serializable{
 
     public Game(String st){
         hero = new Hero(st);
-        
+        hero.hammer = new Hammer(110, 180);
+        hero.shuriken = new Shuriken(42, 162);
+        hero.hammer.Node.setOpacity(0);
+        hero.shuriken.Node.setOpacity(0);
         
         islands i1 = new islands(40,300);
         Islands.add(i1);
@@ -737,6 +757,7 @@ public class GameController implements Initializable,Serializable{
         		
         		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 1);
         		G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() + 1 );
+        		G1.hero.shuriken.Node.setLayoutY(G1.hero.shuriken.Node.getLayoutY() + 1 );
         		
         		for (int i = 0; i < G1.Coins.size(); i++) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
@@ -759,6 +780,50 @@ public class GameController implements Initializable,Serializable{
                 jump(G1.hero.Node);
                 }
             }
+            for(int i = 0; i < G1.Chests.size(); i++ ) {
+            	if (!G1.Chests.get(i).isOpen) {
+            		if (G1.hero.Node.getBoundsInParent().intersects(G1.Chests.get(i).Node.getBoundsInParent())) {
+            			G1.Chests.get(i).isOpen = true;
+            			G1.Chests.get(i).Node.setImage(new Image(getClass().getResourceAsStream("ChestOpen.png"))); 
+            			if(G1.Chests.get(i).Drop == 0) {
+            				G1.coinsCollected += 10;
+            				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+10));
+            			}
+            			
+            			else if(G1.Chests.get(i).Drop == 1) {
+            				//weapon1
+            				if(G1.hero.hammer.isEquiped) {
+            					G1.hero.hammer.level++;
+            				}
+            				else {
+            					G1.hero.hammer.level++;
+            					G1.hero.hammer.isEquiped = true;
+            					G1.hero.shuriken.isEquiped = false;
+            					
+            					G1.hero.hammer.Node.setOpacity(1);
+            					G1.hero.shuriken.Node.setOpacity(0);
+            				}
+            				
+            			}
+            			
+            			else if(G1.Chests.get(i).Drop == 2) {
+            				// weapon2
+            				if(G1.hero.shuriken.isEquiped) {
+            					G1.hero.shuriken.level++;
+            					G1.hero.shuriken.Node.setImage(new Image(getClass().getResourceAsStream("WeaponAxe" + G1.hero.shuriken.level + ".png")));
+            				}
+            				else {
+            					G1.hero.shuriken.level++;
+            					G1.hero.shuriken.isEquiped = true;
+            					G1.hero.hammer.isEquiped = false;
+            					G1.hero.shuriken.Node.setImage(new Image(getClass().getResourceAsStream("WeaponAxe" + G1.hero.shuriken.level + ".png")));
+            					G1.hero.shuriken.Node.setOpacity(1);
+            					G1.hero.hammer.Node.setOpacity(0);
+            				}
+            			}
+            		}
+            	}
+            } 
         }
     }
     ));
@@ -773,6 +838,7 @@ public class GameController implements Initializable,Serializable{
         	if ( G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
         	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 1);
         	G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() - 1 );
+        	G1.hero.shuriken.Node.setLayoutY(G1.hero.shuriken.Node.getLayoutY() - 1 );
     		for (int i = 0; i < G1.Coins.size(); i++) {
     			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
     				
@@ -788,6 +854,50 @@ public class GameController implements Initializable,Serializable{
         	else {
         		G1.hero.up_Timeline.stop();
         	}
+            for(int i = 0; i < G1.Chests.size(); i++ ) {
+            	if (!G1.Chests.get(i).isOpen) {
+            		if (G1.hero.Node.getBoundsInParent().intersects(G1.Chests.get(i).Node.getBoundsInParent())) {
+            			G1.Chests.get(i).isOpen = true;
+            			G1.Chests.get(i).Node.setImage(new Image(getClass().getResourceAsStream("ChestOpen.png"))); 
+            			if(G1.Chests.get(i).Drop == 0) {
+            				G1.coinsCollected += 10;
+            				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+10));
+            			}
+            			
+            			else if(G1.Chests.get(i).Drop == 1) {
+            				//weapon1
+            				if(G1.hero.hammer.isEquiped) {
+            					G1.hero.hammer.level++;
+            				}
+            				else {
+            					G1.hero.hammer.level++;
+            					G1.hero.hammer.isEquiped = true;
+            					G1.hero.shuriken.isEquiped = false;
+            					
+            					G1.hero.hammer.Node.setOpacity(1);
+            					G1.hero.shuriken.Node.setOpacity(0);
+            				}
+            				
+            			}
+            			
+            			else if(G1.Chests.get(i).Drop == 2) {
+            				// weapon2
+            				if(G1.hero.shuriken.isEquiped) {
+            					G1.hero.shuriken.level++;
+            					G1.hero.shuriken.Node.setImage(new Image(getClass().getResourceAsStream("WeaponAxe" + G1.hero.shuriken.level + ".png")));
+            				}
+            				else {
+            					G1.hero.shuriken.level++;
+            					G1.hero.shuriken.isEquiped = true;
+            					G1.hero.hammer.isEquiped = false;
+            					G1.hero.shuriken.Node.setImage(new Image(getClass().getResourceAsStream("WeaponAxe" + G1.hero.shuriken.level + ".png")));
+            					G1.hero.shuriken.Node.setOpacity(1);
+            					G1.hero.hammer.Node.setOpacity(0);
+            				}
+            			}
+            		}
+            	}
+            } 
         }
     }));
     
@@ -841,6 +951,7 @@ public class GameController implements Initializable,Serializable{
 
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
         		G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() - 1 );
+        		G1.hero.shuriken.Node.setLayoutX(G1.hero.shuriken.Node.getLayoutX() - 1 );
         		
         		for (int i = 0; i < G1.Islands.size(); i++) {
         			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() - 1 );
@@ -853,12 +964,19 @@ public class GameController implements Initializable,Serializable{
                 for (int i = 0; i < G1.Coins.size(); i++) {
                     G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -1 );
                 }
+                for (int i = 0; i < G1.FS_L.size(); i++) {
+                	G1.FS_L.get(i).Node.setLayoutX(G1.FS_L.get(i).Node.getLayoutX() -1);
+                }
+                for (int i = 0; i < G1.Chests.size(); i++) {
+                	G1.Chests.get(i).Node.setLayoutX(G1.Chests.get(i).Node.getLayoutX() -1);
+                }
+                G1.boss.Node.setLayoutX(G1.boss.Node.getLayoutX() -1);
 
         	}
         	else if(G1.hero.Node.getLayoutX() >250) {
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
         		G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() - 1 );
-        		
+        		G1.hero.shuriken.Node.setLayoutX(G1.hero.shuriken.Node.getLayoutX() - 1 );
         		for (int i = 0; i < G1.Islands.size(); i++) {
         			G1.Islands.get(i).Node.setLayoutX(G1.Islands.get(i).Node.getLayoutX() -1.8 );
         		}
@@ -870,7 +988,16 @@ public class GameController implements Initializable,Serializable{
                 for (int i = 0; i < G1.Coins.size(); i++) {
                     G1.Coins.get(i).Node.setLayoutX(G1.Coins.get(i).Node.getLayoutX() -1.8 );
                 }
+                for (int i = 0; i < G1.FS_L.size(); i++) {
+                	G1.FS_L.get(i).Node.setLayoutX(G1.FS_L.get(i).Node.getLayoutX() -1.8);
+                }
+                for (int i = 0; i < G1.Chests.size(); i++) {
+                	G1.Chests.get(i).Node.setLayoutX(G1.Chests.get(i).Node.getLayoutX() -1.8);
+                }
+                G1.boss.Node.setLayoutX(G1.boss.Node.getLayoutX() -1.8);
+                
         	}
+
         	
         	
         }
@@ -897,14 +1024,14 @@ public class GameController implements Initializable,Serializable{
         		if (true) {
         			G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 1);
         			G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() + 1 );
+        			G1.hero.shuriken.Node.setLayoutX(G1.hero.shuriken.Node.getLayoutX() + 1 );
         		}
         		for (int i = 0; i < G1.Coins.size(); i++) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
         				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
         				G1.Coins.remove(i);
-        				GD.CoinsC++;
-                        int p = GD.CoinsC;
-        				coinCounter.setText(String.valueOf(p));
+        				G1.coinsCollected += 1;
+            			coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
         				
         			}
         		}
@@ -924,32 +1051,92 @@ public class GameController implements Initializable,Serializable{
                 
                 for (int i = 0; i < G1.Orcs.size(); i++) {
                 	if ( ( Math.pow((G1.hero.Node.getBoundsInParent().getMaxX() - G1.Orcs.get(i).Node.getBoundsInParent().getMinX()),2) + Math.pow((G1.hero.Node.getBoundsInParent().getCenterY() - G1.Orcs.get(i).Node.getBoundsInParent().getCenterY()),2) ) <= 5000) {
-                		if (G1.hero.hammer.rotate_ani.getStatus() != Animation.Status.RUNNING) {
-//                			G1.hero.hammer.rotate_ani.play();
-                			G1.hero.hammer.rot();
-                			G1.Orcs.get(i).down_Timeline.stop();
-                			G1.Orcs.get(i).up_Timeline.stop();
-                			G1.Orcs.get(i).right_Timeline.stop();
-                			
-                			if(G1.Orcs.get(i).die_Rotate.getStatus() != Animation.Status.RUNNING) {
-                				G1.Orcs.get(i).play_Die_Rotate();
+                		if(G1.hero.hammer.isEquiped) {
+	                		if (G1.hero.hammer.rotate_ani.getStatus() != Animation.Status.RUNNING) {
+	                			G1.hero.hammer.rot();
+	                			G1.Orcs.get(i).down_Timeline.stop();
+	                			G1.Orcs.get(i).up_Timeline.stop();
+	                			G1.Orcs.get(i).right_Timeline.stop();
+	                			
+	                			if(G1.Orcs.get(i).die_Rotate.getStatus() != Animation.Status.RUNNING) {
+	                				G1.Orcs.get(i).play_Die_Rotate();
+	                			}
+	                			
+	                			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
+	                				G1.Orcs.get(i).play_Die_Fall();
+	                			}
+	                			G1.Orcs.remove(i);
+	
+	                		}
+                		}
+                		
+                		if(G1.hero.shuriken.isEquiped) {
+                			if (G1.hero.shuriken.rotate_ani.getStatus() != Animation.Status.RUNNING && G1.hero.shuriken.trans_ani.getStatus() != Animation.Status.RUNNING) {
+                				G1.hero.shuriken.rot();
+	                			G1.Orcs.get(i).down_Timeline.stop();
+	                			G1.Orcs.get(i).up_Timeline.stop();
+	                			G1.Orcs.get(i).right_Timeline.stop();
+	                			
+	                			if(G1.Orcs.get(i).die_Rotate.getStatus() != Animation.Status.RUNNING) {
+	                				G1.Orcs.get(i).play_Die_Rotate();
+	                			}
+	                			
+	                			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
+	                				G1.Orcs.get(i).play_Die_Fall();
+	                			}
+	                			G1.Orcs.remove(i);
                 			}
-                			
-                			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
-                				G1.Orcs.get(i).play_Die_Fall();
-                			}
-                			G1.Orcs.remove(i);
-                			//anchorPane.getChildren().removeAll(G1.Orcs.get(i).Node);
-                			
-                			
-                			//orc_down
-                			//orc_rotate
                 		}
                 	}
                 }
 
                 
         	}	
+        	
+            for(int i = 0; i < G1.Chests.size(); i++ ) {
+            	if (!G1.Chests.get(i).isOpen) {
+            		if (G1.hero.Node.getBoundsInParent().intersects(G1.Chests.get(i).Node.getBoundsInParent())) {
+            			G1.Chests.get(i).isOpen = true;
+            			G1.Chests.get(i).Node.setImage(new Image(getClass().getResourceAsStream("ChestOpen.png"))); 
+            			if(G1.Chests.get(i).Drop == 0) {
+            				G1.coinsCollected += 10;
+            				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+10));
+            			}
+            			
+            			else if(G1.Chests.get(i).Drop == 1) {
+            				//weapon1
+            				if(G1.hero.hammer.isEquiped) {
+            					G1.hero.hammer.level++;
+            				}
+            				else {
+            					G1.hero.hammer.level++;
+            					G1.hero.hammer.isEquiped = true;
+            					G1.hero.shuriken.isEquiped = false;
+            					
+            					G1.hero.hammer.Node.setOpacity(1);
+            					G1.hero.shuriken.Node.setOpacity(0);
+            				}
+            				
+            			}
+            			
+            			else if(G1.Chests.get(i).Drop == 2) {
+            				// weapon2
+            				if(G1.hero.shuriken.isEquiped) {
+            					G1.hero.shuriken.level++;
+            					G1.hero.shuriken.Node.setImage(new Image(getClass().getResourceAsStream("WeaponAxe" + G1.hero.shuriken.level + ".png")));
+            				}
+            				else {
+            					G1.hero.shuriken.level++;
+            					G1.hero.shuriken.isEquiped = true;
+            					G1.hero.hammer.isEquiped = false;
+            					G1.hero.shuriken.Node.setImage(new Image(getClass().getResourceAsStream("WeaponAxe" + G1.hero.shuriken.level + ".png")));
+            					G1.hero.shuriken.Node.setOpacity(1);
+            					G1.hero.hammer.Node.setOpacity(0);
+            				}
+            			}
+            		}
+            	}
+            } 
         	
         }
     }));
@@ -1036,19 +1223,40 @@ public class GameController implements Initializable,Serializable{
 
             G1 = new Game(GD.helmet);
             anchorPane.getChildren().addAll(G1.hero.hammer.Node);
+            anchorPane.getChildren().addAll(G1.hero.shuriken.Node);
             anchorPane.getChildren().addAll(G1.hero.Node,G1.boss.Node);
 
             for(int i = 0; i < G1.FS_L.size(); i++){
-            anchorPane.getChildren().addAll(G1.FS_L.get(i).Node);
+            	anchorPane.getChildren().addAll(G1.FS_L.get(i).Node);
             }
             
+            //shuriken_rot_ani
+            G1.hero.shuriken.rotate_ani = new RotateTransition();
+            G1.hero.shuriken.rotate_ani.setNode(G1.hero.shuriken.Node);
+            G1.hero.shuriken.rotate_ani.setDuration(Duration.millis(200));
+            G1.hero.shuriken.rotate_ani.setCycleCount(3);
+            G1.hero.shuriken.rotate_ani.setInterpolator(Interpolator.LINEAR);
+            G1.hero.shuriken.rotate_ani.setByAngle(360);
+            G1.hero.shuriken.rotate_ani.setAxis(Rotate.Z_AXIS);
+            
+            //shuriken_trans_ani
+            G1.hero.shuriken.trans_ani = new TranslateTransition();
+            G1.hero.shuriken.trans_ani.setNode(G1.hero.shuriken.Node);
+            G1.hero.shuriken.trans_ani.setDuration(Duration.millis(200));
+            G1.hero.shuriken.trans_ani.setCycleCount(2);
+            G1.hero.shuriken.trans_ani.setByX(190);
+            G1.hero.shuriken.trans_ani.setAutoReverse(true);
+            
+            
+            
+            //hammer_rot_ani
     		G1.hero.hammer.rotate_ani = new RotateTransition();
     		G1.hero.hammer.rotate_ani.setNode(G1.hero.hammer.Node);
-    		G1.hero.hammer.rotate_ani.setDuration(Duration.millis(300));
+    		G1.hero.hammer.rotate_ani.setDuration(Duration.millis(150));
     		G1.hero.hammer.rotate_ani.setCycleCount(2);
     		G1.hero.hammer.rotate_ani.setAutoReverse(true);
     		G1.hero.hammer.rotate_ani.setInterpolator(Interpolator.LINEAR);
-    		G1.hero.hammer.rotate_ani.setByAngle(360);
+    		G1.hero.hammer.rotate_ani.setByAngle(180);
     		G1.hero.hammer.rotate_ani.setAxis(Rotate.Z_AXIS);
             
             System.out.println(G1.hero.Node.getImage());
@@ -1084,6 +1292,7 @@ public class GameController implements Initializable,Serializable{
                 
                 
             }
+            
 
             for (int i = 0; i<G1.Coins.size();i++){
                 anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
