@@ -858,7 +858,7 @@ public class GameController implements Initializable,Serializable{
                 				G1.Orcs.get(i).play_Die_Fall();
                 			}
                 			G1.Orcs.remove(i);
-                			anchorPane.getChildren().removeAll(G1.Orcs.get(i).Node);
+                			//anchorPane.getChildren().removeAll(G1.Orcs.get(i).Node);
                 			
                 			
                 			//orc_down
