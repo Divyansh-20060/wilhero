@@ -857,6 +857,8 @@ public class GameController implements Initializable,Serializable{
                 			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
                 				G1.Orcs.get(i).play_Die_Fall();
                 			}
+                			G1.Orcs.remove(i);
+                			anchorPane.getChildren().removeAll(G1.Orcs.get(i).Node);
                 			
                 			
                 			//orc_down
