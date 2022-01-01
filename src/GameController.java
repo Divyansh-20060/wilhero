@@ -606,7 +606,7 @@ class Game implements Serializable{
         islands I = new islands(x + 126,y);
         boss = new Boss( FS_L.get(9).Node.getLayoutX() , y - 150);
         
-        Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
+        Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(3.2), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
             	if (boss.up_Timeline.getStatus() != Animation.Status.RUNNING && 
@@ -689,7 +689,7 @@ class Game implements Serializable{
         }
         ));
         
-        Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
+        Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(3.2), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
             	if ( boss.right_Timeline.getStatus() != Animation.Status.RUNNING) {
