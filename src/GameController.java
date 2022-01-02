@@ -2044,7 +2044,7 @@ public class GameController implements Initializable,Serializable{
                     				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
                     				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
-                    				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
+                    				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                     				) {
                     			
                     			//hero hits the top of orc
@@ -2065,7 +2065,7 @@ public class GameController implements Initializable,Serializable{
                     				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
                     				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
-                    				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
+                    				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                     				) {
                     			if(!G1.hero.dead) {
                     				G1.hero.dead = true;
@@ -2191,7 +2191,7 @@ public class GameController implements Initializable,Serializable{
                     	    }
                 	    	orc.up_Timeline.stop();
                 	    	orc.down_Timeline.play();
-                	    	G1.hero.up_Timeline.setOnFinished(e -> hero.down_Timeline.play());	
+                	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());	
                 		}
 
                 		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
