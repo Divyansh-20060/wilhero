@@ -623,7 +623,7 @@ class Game implements Serializable{
             FS_L.add(FS);
             x = x+79;
         }
-        Fline = new f_line(x + 100,y);
+        Fline = new f_line(x ,y-60);
         boss = new Boss( FS_L.get(9).Node.getLayoutX() , y - 150);
         
         Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(3.2), new EventHandler<ActionEvent>() {
@@ -877,6 +877,15 @@ public class GameController implements Initializable,Serializable{
 
     @FXML
     private ImageView coinIcon;
+
+	@FXML
+	private Button Rev_yes;
+
+	@FXML
+	private Button Rev_no;
+
+	@FXML
+	private AnchorPane Revive;
 
 ////////////////HELMET CHANGING NODES////////////////////////////
     @FXML

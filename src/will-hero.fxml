@@ -111,5 +111,40 @@
       </Label>
       <Button layoutX="17.0" layoutY="110.0" mnemonicParsing="false" onAction="#onPauseClick" text="Pause" />
       <Button layoutX="78.0" layoutY="110.0" mnemonicParsing="false" onAction="#onResumeClick" text="Resume" />
+      <AnchorPane fx:id="Revive" disable="true" layoutX="156.0" layoutY="76.0" prefHeight="387.0" prefWidth="647.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#403fa1f7" height="387.0" stroke="BLACK" strokeType="INSIDE" width="656.0" />
+            <Label layoutX="174.0" layoutY="23.0" text="GAME OVER" textFill="#d3e10f">
+               <font>
+                  <Font name="Times New Roman" size="52.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="431.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Coin.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="164.0" layoutY="102.0" text="Continue for       ?" textFill="#d3e10f">
+               <font>
+                  <Font name="Times New Roman" size="45.0" />
+               </font>
+            </Label>
+            <Label layoutX="397.0" layoutY="106.0" text="15" textFill="WHITE">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Label>
+            <Button fx:id="Rev_yes" layoutX="174.0" layoutY="284.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="114.0" text="YES">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="Rev_no" layoutX="413.0" layoutY="284.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="122.0" text="NO">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
