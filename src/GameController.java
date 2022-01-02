@@ -104,6 +104,13 @@ class Falling_Step extends gameobjcts{
 
     }
 }
+class f_line extends gameobjcts{
+	public f_line(double x, double y){
+		Node = new ImageView("fisland.png");
+		Node.setLayoutX(x);
+		Node.setLayoutY(y);
+	}
+}
 
 class Orc extends gameobjcts{
 	public RotateTransition die_Rotate;
@@ -257,13 +264,13 @@ class Coin extends gameobjcts{
 
 class Game implements Serializable{
 	boolean isPaused;
-    public int[] isl = {0,0};
     public int coinsCollected;
     public Hero hero;
     public Boss boss;
     public boolean trapTriggered;
     public boolean trapActivated;
-    
+    public f_line Fline;
+
     public ArrayList<islands> Islands = new ArrayList<islands>();
     public ArrayList<Orc> Orcs = new ArrayList<Orc>();
     public ArrayList<Coin> Coins = new ArrayList<Coin>();
@@ -603,7 +610,7 @@ class Game implements Serializable{
             FS_L.add(FS);
             x = x+79;
         }
-        islands I = new islands(x + 126,y);
+        Fline = new f_line(x + 100,y);
         boss = new Boss( FS_L.get(9).Node.getLayoutX() , y - 150);
         
         Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(3.2), new EventHandler<ActionEvent>() {
@@ -1458,6 +1465,7 @@ public class GameController implements Initializable,Serializable{
             anchorPane.getChildren().addAll(G1.hero.hammer.Node);
             anchorPane.getChildren().addAll(G1.hero.shuriken.Node);
             anchorPane.getChildren().addAll(G1.hero.Node,G1.boss.Node);
+			anchorPane.getChildren().addAll(G1.Fline.Node);
 
             for(int i = 0; i < G1.FS_L.size(); i++){
             	anchorPane.getChildren().addAll(G1.FS_L.get(i).Node);
