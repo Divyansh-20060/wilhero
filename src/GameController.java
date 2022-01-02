@@ -922,6 +922,9 @@ public class GameController implements Initializable,Serializable{
 	@FXML
 	private AnchorPane Revive;
 
+	@FXML
+	private Label No_coin;
+
 ////////////////HELMET CHANGING NODES////////////////////////////
     @FXML
     private ImageView h1;
