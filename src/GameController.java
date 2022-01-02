@@ -43,6 +43,7 @@ class game_data implements Serializable{
     public double[] Sword = {0,0};
     public double[] Boss = {0,0};
     public double[] Hero_P = {0,0};
+	public double[] Axe = {0,0};
     public int CoinsC = 0;
     public void CopyData (Game G1){
         for(int i = 0; i < G1.Islands.size(); i++){
@@ -75,6 +76,9 @@ class game_data implements Serializable{
 
         Sword[0] = G1.hero.hammer.Node.getLayoutX();
         Sword[1] = G1.hero.hammer.Node.getLayoutY();
+
+		Axe[0] = G1.hero.shuriken.Node.getLayoutX();
+		Axe[1] = G1.hero.shuriken.Node.getLayoutY();
 
         Hero_P[0] = G1.hero.Node.getLayoutX();
         Hero_P[1] = G1.hero.Node.getLayoutY();
@@ -2154,6 +2158,7 @@ public class GameController implements Initializable,Serializable{
                
                 
                 G1.Orcs.add(orc);
+				anchorPane.getChildren().addAll(G1.Orcs.get(G1.Orcs.size() -1).Node);
                 
             }
         }
@@ -2168,6 +2173,7 @@ public class GameController implements Initializable,Serializable{
             while(GD.Coin_P.size() > G1.Coins.size()){
                 Coin coin = new Coin(0,0);
                 G1.Coins.add(coin);
+				anchorPane.getChildren().addAll(G1.Coins.get(G1.Coins.size() -1).Node);
             }
         }
 
@@ -2211,6 +2217,10 @@ public class GameController implements Initializable,Serializable{
 
         G1.hero.Node.setLayoutX(GD.Hero_P[0]);
         G1.hero.Node.setLayoutY(GD.Hero_P[1]);
+
+		G1.hero.shuriken.Node.setLayoutX(GD.Hero_P[0]);
+		G1.hero.shuriken.Node.setLayoutY(GD.Hero_P[1]);
+
         int p = GD.CoinsC;
         coinCounter.setText(String.valueOf(p));
     }
