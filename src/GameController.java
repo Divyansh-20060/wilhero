@@ -22,10 +22,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import javafx.animation.ScaleTransition;
@@ -33,6 +30,7 @@ import javafx.animation.Interpolator;
 
 
 class game_data implements Serializable{
+	public boolean Fsave = true;
     public String helmet = "hero.png";
     public int Score = 0;
     public ArrayList<double[]> Island_P = new ArrayList<double[]>();
@@ -45,7 +43,12 @@ class game_data implements Serializable{
     public double[] Hero_P = {0,0};
 	public double[] Axe = {0,0};
     public int CoinsC = 0;
+	public boolean isSwordEquipped;
+	public boolean isShurikenEquipped;
+	public boolean Rev;
+	public double[] F_line = {0,0};
     public void CopyData (Game G1){
+		if(Fsave){
         for(int i = 0; i < G1.Islands.size(); i++){
             double[] P = {G1.Islands.get(i).Node.getLayoutX(),G1.Islands.get(i).Node.getLayoutY()};
             Island_P.add(P);
@@ -71,6 +74,8 @@ class game_data implements Serializable{
             Falling_p.add(p);
         }
 
+		CoinsC = G1.coinsCollected;
+
         Boss[0] = G1.boss.Node.getLayoutX();
         Boss[1] = G1.boss.Node.getLayoutY();
 
@@ -82,6 +87,67 @@ class game_data implements Serializable{
 
         Hero_P[0] = G1.hero.Node.getLayoutX();
         Hero_P[1] = G1.hero.Node.getLayoutY();
+
+		isSwordEquipped = G1.hero.hammer.isEquiped;
+		isShurikenEquipped = G1.hero.shuriken.isEquiped;
+
+		F_line[0] = G1.Fline.Node.getLayoutX();
+		F_line[1] = G1.Fline.Node.getLayoutY();
+
+		Rev = G1.hero.revived;
+
+		Fsave = false;
+		}
+		else{
+			for(int i = 0; i < G1.Islands.size(); i++){
+				Island_P.get(i)[0] = G1.Islands.get(i).Node.getLayoutX();
+				Island_P.get(i)[1] = G1.Islands.get(i).Node.getLayoutY();
+			}
+
+			for(int i = 0; i < G1.Orcs.size(); i++){
+				Orc_P.get(i)[0] = G1.Orcs.get(i).Node.getLayoutX();
+				Orc_P.get(i)[1] = G1.Orcs.get(i).Node.getLayoutY();
+			}
+
+			for(int i = 0; i < G1.Coins.size(); i++){
+				Coin_P.get(i)[0] = G1.Coins.get(i).Node.getLayoutX();
+				Coin_P.get(i)[1] = G1.Coins.get(i).Node.getLayoutY();
+			}
+
+			for(int i = 0; i< G1.Chests.size(); i++){
+				Chest_p.get(i)[0] = G1.Chests.get(i).Node.getLayoutX();
+				Chest_p.get(i)[1] = G1.Chests.get(i).Node.getLayoutY();
+				Chest_p.get(i)[2] = G1.Chests.get(i).Drop;
+			}
+
+			for(int i = 0; i < G1.FS_L.size(); i++){
+				Falling_p.get(i)[0] = G1.FS_L.get(i).Node.getLayoutX();
+				Falling_p.get(i)[1] = G1.FS_L.get(i).Node.getLayoutY();
+			}
+			CoinsC = G1.coinsCollected;
+
+			Boss[0] = G1.boss.Node.getLayoutX();
+			Boss[1] = G1.boss.Node.getLayoutY();
+
+			Sword[0] = G1.hero.hammer.Node.getLayoutX();
+			Sword[1] = G1.hero.hammer.Node.getLayoutY();
+
+			Axe[0] = G1.hero.shuriken.Node.getLayoutX();
+			Axe[1] = G1.hero.shuriken.Node.getLayoutY();
+
+			Hero_P[0] = G1.hero.Node.getLayoutX();
+			Hero_P[1] = G1.hero.Node.getLayoutY();
+
+			isSwordEquipped = G1.hero.hammer.isEquiped;
+			isShurikenEquipped = G1.hero.shuriken.isEquiped;
+
+			F_line[0] = G1.Fline.Node.getLayoutX();
+			F_line[1] = G1.Fline.Node.getLayoutY();
+
+			Rev = G1.hero.revived;
+			System.out.println("ok");
+
+		}
     }
 }
 
@@ -992,6 +1058,7 @@ public class GameController implements Initializable,Serializable{
 	
 	@FXML
     private AnchorPane anchorPane;
+
     @FXML
     private Button save;
 
@@ -1247,42 +1314,6 @@ public class GameController implements Initializable,Serializable{
         
         public void handle(ActionEvent event) {
 
-
-            //////////buggy code starts
-
-//            boolean leftI = G1.Islands.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
-//            boolean leftO;
-//            if(G1.Orcs.size() != 0){
-//            leftO = G1.Orcs.get(0).Node.getBoundsInParent().getMaxX() <= BG.getBoundsInParent().getMinX();
-//            }
-//            else{
-//                leftO = false;
-//            }
-//            if(leftI){
-//                anchorPane.getChildren().removeAll(G1.Islands.get(0).Node);
-//                G1.Islands.remove(0);
-//                G1.IslandSpawner();
-//                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() - 1).Node);
-//                for(int i = 0; i < G1.Orcs.size(); i++){
-//                    if(!anchorPane.getChildren().contains(G1.Orcs.get(i).Node)){
-//                        anchorPane.getChildren().addAll(G1.Orcs.get(i).Node);
-//                    }
-//                }
-//
-//                for(int i = 0; i < G1.Coins.size(); i++){
-//                    if(!anchorPane.getChildren().contains(G1.Coins.get(i).Node)){
-//                        anchorPane.getChildren().addAll(G1.Coins.get(i).Node);
-//                    }
-//                }
-//            }
-//            if(leftO){
-//                System.out.println("ayo");
-//                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
-//                G1.Orcs.remove(0);
-//            }
-
-            /////////clean code starts
-
         	
         	GD.Score = -(int)(G1.Islands.get(0).Node.getLayoutX() / 200);
     		Score.setText(String.valueOf(GD.Score));
@@ -1536,31 +1567,18 @@ public class GameController implements Initializable,Serializable{
         G1.hero.right_Timeline.setCycleCount(210);  
         G1.hero.left_Timeline.setCycleCount(Animation.INDEFINITE); 
         G1.hero.left_Timeline.play();
-        
-       
-        
-        G1.hero.right_Timeline.play();
-        
-        Dash.setOnFinished(e -> {
-            boolean left = G1.Islands.get(0).Node.getBoundsInLocal().getMaxX() <= BG.getBoundsInLocal().getMinX();
-            if(left){
-                anchorPane.getChildren().remove(G1.Islands.get(0).Node);
-                G1.Islands.remove(0);
-                G1.IslandSpawner();
-                anchorPane.getChildren().addAll(G1.Islands.get(G1.Islands.size() -1 ).Node);
-            }
-//
-//            if(!G1.Orcs.get(0).Node.getBoundsInParent().intersects(BG.getBoundsInParent())){
-//                anchorPane.getChildren().removeAll(G1.Orcs.get(0).Node);
-//                G1.Orcs.remove(0);
-//            }
 
+
+
+        G1.hero.right_Timeline.play();
+
+        Dash.setOnFinished(e -> {
             G1.hero.down_Timeline.play();
         }
         );
-        
 
-        
+
+
 
     }
     
@@ -1727,11 +1745,23 @@ public class GameController implements Initializable,Serializable{
     ///////////////////////////////////////BUTTON ASSIGNMENTS//////////////////////////////////////////////////////////
 
     public void onPauseClick() {
+		save.setVisible(true);
+		save.setDisable(false);
+		load.setVisible(true);
+		load.setDisable(false);
+		resume.setVisible(true);
+		resume.setDisable(false);
+
         G1.pauseGame();
     }
 
     public void onResumeClick() {
-
+		save.setVisible(false);
+		save.setDisable(true);
+		load.setVisible(false);
+		load.setDisable(true);
+		resume.setVisible(false);
+		resume.setDisable(true);
         G1.resumeGame();
 
     }
@@ -1855,6 +1885,16 @@ public class GameController implements Initializable,Serializable{
 	    	transition.setByY(-230);
 	    	transition.play();
 
+
+			Helmets.setVisible(false);
+			Helmets.setDisable(true);
+			dash.setDisable(false);
+			dash.setVisible(true);
+			pause.setDisable(false);
+			pause.setVisible(true);
+			Start.setVisible(false);
+			Start.setDisable(true);
+
     	}
     	
         DT = true;
@@ -1905,6 +1945,9 @@ public class GameController implements Initializable,Serializable{
     }
 
     public void onLoadB() throws IOException, ClassNotFoundException {
+		System.out.println(G1.Islands.size());
+		System.out.println(G1.Orcs.size());
+		System.out.println(G1.Coins.size());
 
         String fileS = "";
         String dir = System.getProperty("user.dir");
@@ -1914,14 +1957,32 @@ public class GameController implements Initializable,Serializable{
 
         System.out.println("Choose Save file" + "\n");
         String[] saves = saveL.list();
+		List<String> savel = Arrays.asList(saves);
+
         for(int i = 0; i<saves.length; i++){
             System.out.println(saves[i]);
         }
+		Scanner sc = new Scanner(System.in);
+		String st = "";
 
-        Scanner sc = new Scanner(System.in);
-        String st = sc.nextLine();
+		Boolean exh = false;
+		while(!exh){
+			st = sc.nextLine();
+			if(savel.contains(st)){
+				exh = true;
+			}
+			else{
+				System.out.println("Incorrect filename. try again");
+			}
+		}
+
+
         fileS = fileS + File.separator + st;
         GD = G1.load(fileS);
+
+		System.out.println(GD.Island_P.size());
+		System.out.println(GD.Orc_P.size());
+		System.out.println(GD.Coin_P.size());
 
         if(GD.Island_P.size() > G1.Islands.size()){
             while (GD.Island_P.size() > G1.Islands.size()){
@@ -1936,73 +1997,75 @@ public class GameController implements Initializable,Serializable{
             }
         }
 
+
+
         if(GD.Orc_P.size() > G1.Orcs.size()){
             while(GD.Orc_P.size() > G1.Orcs.size()){
                 Orc orc = new Orc(0,0);
-                
+
                 Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                    	if (orc.up_Timeline.getStatus() != Animation.Status.RUNNING && 
+                    	if (orc.up_Timeline.getStatus() != Animation.Status.RUNNING &&
                     			orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
-                    		
+
                     		orc.Node.setLayoutY(orc.Node.getLayoutY() + 1);
-                    		
+
                     		 if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
                     				(G1.hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
                     				  )  {
-                    			
+
                     			//hero hits the side of orc
-                    			
-                    			
+
+
                     			orc.right_Timeline.setCycleCount(120);
                     			orc.right_Timeline.play();
                     			G1.hero.right_Timeline.stop();
                     			G1.hero.down_Timeline.play();
                     		}
-                    		
-                    		
-                    		else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
-                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
+
+
+                    		else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                     				) {
-                    			
+
                     			//hero hits the top of orc
                     			G1.hero.up_Timeline.setCycleCount(56);
-                    	    	
+
                     	    	if(G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
                     	    		G1.hero.up_Timeline.play();
                     	    	}
-                    	    	
-                    	        
-                    	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
-                    	    	
-                    	    	
-                    		}
-                    		
 
-                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
-                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
+
+                    	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
+
+
+                    		}
+
+
+                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                     				) {
                     			orc.down_Timeline.stop();
-                    			G1.pauseGame(); 
-                    			
+                    			G1.pauseGame();
+
                     		}
-                    		
+
 
                     	}
                         for (int i = 0;i < G1.Islands.size(); i++){
                             if(orc.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
                             orc.down_Timeline.stop();
-                            
+
 
                             orc.up_Timeline.setCycleCount(160);
                             orc.up_Timeline.play();
@@ -2013,37 +2076,37 @@ public class GameController implements Initializable,Serializable{
                     }
                 }
                 ));
-                
+
                 Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                     	if ( orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
-                    		
+
                         	orc.Node.setLayoutY(orc.Node.getLayoutY() - 1);
-                        	
+
                     		if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
                     				(G1.hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
-                    				  
+
                     				    )  {
-                    			
+
                     			//hero hits the side of orc
                     			G1.hero.right_Timeline.stop();
                     			G1.hero.down_Timeline.play();
-                    			
+
                     			orc.right_Timeline.setCycleCount(120);
                     			orc.right_Timeline.play();
                     		}
 
-                        	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
-                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
+                        	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                     				 ) {
-                    			
+
                     			//hero hits the top of orc
                         		G1.hero.up_Timeline.setCycleCount(90);
                     	    	if(G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
@@ -2051,57 +2114,57 @@ public class GameController implements Initializable,Serializable{
                         	    }
                     	    	orc.up_Timeline.stop();
                     	    	orc.down_Timeline.play();
-                    	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());	
+                    	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
                     		}
 
-                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
-                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
+                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                     				) {
                     			orc.up_Timeline.stop();
                     			G1.pauseGame();
-                    			
+
                     		}
 
-                    		
+
                         }
                     }
                 }
                 ));
-                
+
                 Timeline right_Timeline = new Timeline(new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                    	
-                    	
+
+
                     	orc.Node.setLayoutX(orc.Node.getLayoutX() + 1.5);
-                    	
+
 //                    	orc.right_Timeline.setOnFinished(t -> orc.down_Timeline.play());
                     	if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
                 				(G1.hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
-                				  
+
                 				    )  {
-                			
+
                 			//hero hits the side of orc
                     		G1.hero.right_Timeline.stop();
                     		G1.hero.down_Timeline.play();
-                			
+
                 			orc.right_Timeline.setCycleCount(120);
                 			orc.right_Timeline.play();
                 		}
 
-                    	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
-                				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
+                    	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+                				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) &&
                 				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                 				 ) {
-                			
+
                 			//hero hits the top of orc
                 	    	G1.hero.up_Timeline.setCycleCount(90);
                 	    	if(G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
@@ -2109,21 +2172,21 @@ public class GameController implements Initializable,Serializable{
                     	    }
                 	    	orc.up_Timeline.stop();
                 	    	orc.down_Timeline.play();
-                	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());	
+                	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
                 		}
 
-                		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
-                				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
+                		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
+                				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                 				) {
                 			orc.right_Timeline.stop();
                 			G1.pauseGame();
-                			
+
                 		}
 
-                    	
+
                     }
                 }
                 ));
@@ -2158,20 +2221,21 @@ public class GameController implements Initializable,Serializable{
                
                 
                 G1.Orcs.add(orc);
-				anchorPane.getChildren().addAll(G1.Orcs.get(G1.Orcs.size() -1).Node);
+				//anchorPane.getChildren().addAll(G1.Orcs.get(G1.Orcs.size() -1).Node);
                 
             }
         }
 
         else if (GD.Orc_P.size() < G1.Orcs.size()){
             while(GD.Orc_P.size() < G1.Orcs.size()){
+				anchorPane.getChildren().removeAll(G1.Orcs.get(G1.Orcs.size() -1).Node);
                 G1.Orcs.remove(G1.Orcs.size() -1);
             }
         }
 
         if(GD.Coin_P.size() > G1.Coins.size()){
             while(GD.Coin_P.size() > G1.Coins.size()){
-                Coin coin = new Coin(0,0);
+                Coin coin = new Coin(900,900);
                 G1.Coins.add(coin);
 				anchorPane.getChildren().addAll(G1.Coins.get(G1.Coins.size() -1).Node);
             }
@@ -2179,6 +2243,7 @@ public class GameController implements Initializable,Serializable{
 
         else if (GD.Coin_P.size() < G1.Coins.size()){
             while (GD.Coin_P.size() < G1.Coins.size()){
+				anchorPane.getChildren().removeAll(G1.Coins.get(G1.Coins.size() -1).Node);
                 G1.Coins.remove(G1.Coins.size() - 1);
             }
         }
@@ -2209,6 +2274,16 @@ public class GameController implements Initializable,Serializable{
             G1.FS_L.get(i).Node.setLayoutY(GD.Falling_p.get(i)[1]);
         }
 
+		if(GD.isSwordEquipped){
+			G1.hero.hammer.isEquiped = true;
+			G1.hero.hammer.Node.setOpacity(1);
+		}
+
+		else if (GD.isShurikenEquipped){
+			G1.hero.shuriken.isEquiped = true;
+			G1.hero.shuriken.Node.setOpacity(1);
+		}
+
         G1.boss.Node.setLayoutX(GD.Boss[0]);
         G1.boss.Node.setLayoutY(GD.Boss[1]);
 
@@ -2218,11 +2293,31 @@ public class GameController implements Initializable,Serializable{
         G1.hero.Node.setLayoutX(GD.Hero_P[0]);
         G1.hero.Node.setLayoutY(GD.Hero_P[1]);
 
-		G1.hero.shuriken.Node.setLayoutX(GD.Hero_P[0]);
-		G1.hero.shuriken.Node.setLayoutY(GD.Hero_P[1]);
+		G1.hero.shuriken.Node.setLayoutX(GD.Axe[0]);
+		G1.hero.shuriken.Node.setLayoutY(GD.Axe[1]);
 
-        int p = GD.CoinsC;
-        coinCounter.setText(String.valueOf(p));
+		G1.Fline.Node.setLayoutX(GD.F_line[0]);
+		G1.Fline.Node.setLayoutY(GD.F_line[1]);
+
+		G1.coinsCollected = GD.CoinsC;
+
+		int K = GD.Score;
+		Score.setText(String.valueOf(K));
+
+		System.out.println(G1.Islands.size());
+		System.out.println(G1.Orcs.size());
+		System.out.println(G1.Coins.size());
+
+		G1.hero.revived = GD.Rev;
+
+//		for (int i = 0; i< G1.Orcs.size(); i++){
+//			if (G1.Orcs.get(i).down_Timeline.getStatus() != Animation.Status.RUNNING){
+//				G1.Orcs.get(i).down_Timeline.play();
+//			}
+//		}
+
+
+
     }
 
 

@@ -19,8 +19,8 @@
             <Image url="@images/WMV.gif" />
          </image>
       </ImageView>
-      <Button fx:id="Helmets" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#onHelmetBClick" text="Helmets" />
-      <Button fx:id="dash" layoutX="384.0" layoutY="465.0" mnemonicParsing="false" onAction="#onDashButtonClick" prefHeight="51.0" prefWidth="98.0" text="dash">
+      <Button fx:id="Helmets" layoutX="579.0" layoutY="2.0" mnemonicParsing="false" onAction="#onHelmetBClick" text="Helmets" />
+      <Button fx:id="dash" disable="true" layoutX="395.0" layoutY="484.0" mnemonicParsing="false" onAction="#onDashButtonClick" prefHeight="38.0" prefWidth="98.0" text="dash" visible="false">
          <font>
             <Font size="26.0" />
          </font>
@@ -39,8 +39,8 @@
             </Button>
          </children>
       </VBox>
-      <Button fx:id="save" layoutX="23.0" layoutY="2.0" mnemonicParsing="false" onAction="#onSaveB" text="save" />
-      <Button fx:id="load" layoutX="86.0" layoutY="2.0" mnemonicParsing="false" onAction="#onLoadB" text="load" />
+      <Button fx:id="save" disable="true" layoutX="80.0" layoutY="2.0" mnemonicParsing="false" onAction="#onSaveB" text="save" visible="false" />
+      <Button fx:id="load" disable="true" layoutX="144.0" layoutY="2.0" mnemonicParsing="false" onAction="#onLoadB" text="load" visible="false" />
       <Text fx:id="WILLHERO" fill="WHITE" layoutX="292.0" layoutY="91.0" stroke="WHITE" strokeDashOffset="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" WILL HERO" textAlignment="CENTER" wrappingWidth="283.20006103515624">
          <font>
             <Font name="Ubuntu Bold" size="96.0" />
@@ -109,10 +109,11 @@
             <Font name="Candara Light" size="58.0" />
          </font>
       </Label>
-      <Button fx:id="pause" layoutX="17.0" layoutY="110.0" mnemonicParsing="false" onAction="#onPauseClick" text="Pause" />
-      <Button fx:id="resume" layoutX="78.0" layoutY="110.0" mnemonicParsing="false" onAction="#onResumeClick" text="Resume" />
+      <Button fx:id="pause" disable="true" layoutX="14.0" layoutY="2.0" mnemonicParsing="false" onAction="#onPauseClick" text="Pause" visible="false" />
+      <Button fx:id="resume" disable="true" layoutX="195.0" layoutY="2.0" mnemonicParsing="false" onAction="#onResumeClick" text="Resume" visible="false" />
       <AnchorPane fx:id="Revive" disable="true" layoutX="156.0" layoutY="76.0" prefHeight="387.0" prefWidth="647.0" visible="false">
          <children>
+
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#403fa1f7" height="387.0" stroke="BLACK" strokeType="INSIDE" width="656.0" />
             <Label layoutX="138.0" layoutY="101.0" text="Continue for       " textFill="#d3e10f">
                <font>
