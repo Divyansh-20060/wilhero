@@ -966,7 +966,9 @@ public class GameController implements Initializable,Serializable{
         public void handle(ActionEvent event) {
         	if (G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING && 
         			G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
-        		
+    			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
+    				G1.pauseGame();
+    			}
         		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 1);
         		G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() + 1 );
         		G1.hero.shuriken.Node.setLayoutY(G1.hero.shuriken.Node.getLayoutY() + 1 );
@@ -1057,20 +1059,23 @@ public class GameController implements Initializable,Serializable{
         
         public void handle(ActionEvent event) {
         	if ( G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
-        	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 1);
-        	G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() - 1 );
-        	G1.hero.shuriken.Node.setLayoutY(G1.hero.shuriken.Node.getLayoutY() - 1 );
-    		for (int i = 0; i < G1.Coins.size(); i++) {
-    			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
-    				
-    				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
-    				G1.Coins.remove(i);
-    				G1.coinsCollected++;
-    				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
-    				
-    				
+    			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
+    				G1.pauseGame();
     			}
-    		}
+	        	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 1);
+	        	G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() - 1 );
+	        	G1.hero.shuriken.Node.setLayoutY(G1.hero.shuriken.Node.getLayoutY() - 1 );
+	    		for (int i = 0; i < G1.Coins.size(); i++) {
+	    			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
+	    				
+	    				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
+	    				G1.Coins.remove(i);
+	    				G1.coinsCollected++;
+	    				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+	    				
+	    				
+	    			}
+	    		}
         	}
         	else {
         		G1.hero.up_Timeline.stop();
@@ -1169,6 +1174,7 @@ public class GameController implements Initializable,Serializable{
     		Score.setText(String.valueOf(GD.Score));
     		
         	if (G1.hero.Node.getLayoutX() >= 60 && G1.hero.Node.getLayoutX() <= 250) {
+        		G1.Fline.Node.setLayoutX(G1.Fline.Node.getLayoutX() - 1);
 
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
         		G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() - 1 );
@@ -1195,6 +1201,7 @@ public class GameController implements Initializable,Serializable{
 
         	}
         	else if(G1.hero.Node.getLayoutX() >250) {
+        		G1.Fline.Node.setLayoutX(G1.Fline.Node.getLayoutX() - 1.8);
         		G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() - 1 );
         		G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() - 1 );
         		G1.hero.shuriken.Node.setLayoutX(G1.hero.shuriken.Node.getLayoutX() - 1 );
@@ -1243,6 +1250,9 @@ public class GameController implements Initializable,Serializable{
         	
         	if (G1.hero.Node.getLayoutX() <= 250) {
         		if (true) {
+        			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
+        				G1.pauseGame();
+        			}
         			G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 1);
         			G1.hero.hammer.Node.setLayoutX(G1.hero.hammer.Node.getLayoutX() + 1 );
         			G1.hero.shuriken.Node.setLayoutX(G1.hero.shuriken.Node.getLayoutX() + 1 );
@@ -1380,7 +1390,7 @@ public class GameController implements Initializable,Serializable{
     public void activateTrap() {
     	G1.trapActivated = true;
     	for (int i = 0; i < G1.FS_L.size(); i++) {
-    		G1.FS_L.get(i).fall.setDelay(Duration.millis(i* 500));
+    		G1.FS_L.get(i).fall.setDelay(Duration.millis(i* 800));
     		G1.FS_L.get(i).fall.play();
     	}
     }
@@ -1471,7 +1481,7 @@ public class GameController implements Initializable,Serializable{
             	anchorPane.getChildren().addAll(G1.FS_L.get(i).Node);
             	G1.FS_L.get(i).fall = new TranslateTransition();
             	G1.FS_L.get(i).fall.setNode(G1.FS_L.get(i).Node);
-            	G1.FS_L.get(i).fall.setDuration(Duration.millis(1400));
+            	G1.FS_L.get(i).fall.setDuration(Duration.millis(1900));
             	G1.FS_L.get(i).fall.setCycleCount(1);
             	G1.FS_L.get(i).fall.setByY(600);
             	
