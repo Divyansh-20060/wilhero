@@ -1103,7 +1103,7 @@ public class GameController implements Initializable,Serializable{
             Helm_Lab.setText("Choose Helmet");
         }
         else{
-            Helm_Lab.setText("Helmet already equipped!");
+            Helm_Lab.setText("Already on!");
         }
     }
 
@@ -1116,7 +1116,7 @@ public class GameController implements Initializable,Serializable{
             Helm_Lab.setText("Choose Helmet");
         }
         else{
-            Helm_Lab.setText("Helmet already equipped!");
+            Helm_Lab.setText("Already on!");
         }
     }
 
