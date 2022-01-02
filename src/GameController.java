@@ -462,14 +462,14 @@ class Game implements Serializable{
     	
     	
     	for (int i = 0; i < Orcs.size(); i++) {
-    		if ((!Orcs.get(i).dead) &&   Orcs.get(i).down_Timeline != null && Orcs.get(i).down_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		if (Orcs.get(i).down_Timeline != null && Orcs.get(i).down_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).down_Timeline.play();
     		}
-    		if ((!Orcs.get(i).dead) && Orcs.get(i).up_Timeline != null &&  Orcs.get(i).up_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		if (Orcs.get(i).up_Timeline != null &&  Orcs.get(i).up_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).up_Timeline.play();
     		}
     		
-    		if ((!Orcs.get(i).dead) && Orcs.get(i).right_Timeline != null &&  Orcs.get(i).right_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		if (Orcs.get(i).right_Timeline != null &&  Orcs.get(i).right_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).right_Timeline.play();
     		}
     	}
@@ -502,17 +502,11 @@ class Game implements Serializable{
                 			orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
                 		
                 		orc.Node.setLayoutY(orc.Node.getLayoutY() + 1);
-                		if (orc.Node.getLayoutY() > 600 && orc.dead != true) {
+                		if (orc.Node.getLayoutY() > 460 && orc.dead != true) {
                 			orc.dead = true;
-                			orc.down_Timeline.stop();
-                			orc.up_Timeline.stop();
-                			orc.right_Timeline.stop();
 	                		if (orc.die_Fall.getStatus() != Animation.Status.RUNNING ) {
 	                			orc.die_Fall.play();
 	                			coinsCollected += 5;
-	                			
-//	                			Orcs.remove(orc);
-	                			System.out.println("fall kill");
 	                			
 	                			
 	                		}
@@ -1487,11 +1481,8 @@ public class GameController implements Initializable,Serializable{
 	                			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
 	                				G1.Orcs.get(i).play_Die_Fall();
 	                			}
-	                			G1.Orcs.get(i).dead = true;
-//	                			G1.Orcs.remove(i);
-	                			
+	                			G1.Orcs.remove(i);
 	                			G1.coinsCollected += 5;
-	                			System.out.println("sword kill");
 	                			coinCounter.setText(Integer.toString(G1.coinsCollected));
 	
 	                		}
@@ -1511,10 +1502,8 @@ public class GameController implements Initializable,Serializable{
 	                			if(G1.Orcs.get(i).die_Fall.getStatus() != Animation.Status.RUNNING) {
 	                				G1.Orcs.get(i).play_Die_Fall();
 	                			}
-//	                			G1.Orcs.remove(i);
-	                			G1.Orcs.get(i).dead = true;
+	                			G1.Orcs.remove(i);
 	                			G1.coinsCollected += 5;
-	                			System.out.println("axe kill");
 	                			coinCounter.setText(Integer.toString(G1.coinsCollected));
                 			}
                 		}
@@ -2031,12 +2020,20 @@ public class GameController implements Initializable,Serializable{
             }
         }
 
-        if (GD.Coin_P.size() < G1.Coins.size()){
-            while (GD.Coin_P.size() < G1.Coins.size()){
+		if(GD.Coin_P.size() > G1.Coins.size()){
+			while(GD.Coin_P.size() > G1.Coins.size()){
+				Coin coin = new Coin(900,900);
+				G1.Coins.add(coin);
+				anchorPane.getChildren().addAll(G1.Coins.get(G1.Coins.size() -1).Node);
+			}
+		}
+
+		else if (GD.Coin_P.size() < G1.Coins.size()){
+			while (GD.Coin_P.size() < G1.Coins.size()){
 				anchorPane.getChildren().removeAll(G1.Coins.get(G1.Coins.size() -1).Node);
-                G1.Coins.remove(G1.Coins.size() - 1);
-            }
-        }
+				G1.Coins.remove(G1.Coins.size() - 1);
+			}
+		}
 
         for(int i = 0; i < G1.Islands.size(); i++){
             G1.Islands.get(i).Node.setLayoutX(GD.Island_P.get(i)[0]);
