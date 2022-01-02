@@ -113,6 +113,7 @@ class f_line extends gameobjcts{
 }
 
 class Orc extends gameobjcts{
+	public boolean dead;
 	public RotateTransition die_Rotate;
 	public TranslateTransition die_Fall;
 	
@@ -390,6 +391,18 @@ class Game implements Serializable{
                 			orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
                 		
                 		orc.Node.setLayoutY(orc.Node.getLayoutY() + 1);
+                		if (orc.Node.getLayoutY() > 460 && orc.dead != true) {
+                			orc.dead = true;
+	                		if (orc.die_Fall.getStatus() != Animation.Status.RUNNING ) {
+	                			orc.die_Fall.play();
+	                			coinsCollected += 5;
+	                			
+	                			
+	                		}
+	                		if (orc.die_Rotate.getStatus() != Animation.Status.RUNNING ) {
+	                			orc.die_Rotate.play();
+	                		}
+                		}
                 		
                 		 if(hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                 				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
@@ -964,6 +977,7 @@ public class GameController implements Initializable,Serializable{
         
         @Override
         public void handle(ActionEvent event) {
+        	coinCounter.setText(Integer.toString(G1.coinsCollected));
         	if (G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING && 
         			G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
     			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
@@ -979,7 +993,7 @@ public class GameController implements Initializable,Serializable{
         				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
         				G1.Coins.remove(i);
         				G1.coinsCollected++;
-        				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+        				coinCounter.setText(Integer.toString(G1.coinsCollected));
         			}
         		}
         	}
@@ -1058,6 +1072,7 @@ public class GameController implements Initializable,Serializable{
         @Override
         
         public void handle(ActionEvent event) {
+        	coinCounter.setText(Integer.toString(G1.coinsCollected));
         	if ( G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
     			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
     				G1.pauseGame();
@@ -1071,7 +1086,7 @@ public class GameController implements Initializable,Serializable{
 	    				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
 	    				G1.Coins.remove(i);
 	    				G1.coinsCollected++;
-	    				coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+	    				coinCounter.setText(Integer.toString(G1.coinsCollected));
 	    				
 	    				
 	    			}
@@ -1246,7 +1261,7 @@ public class GameController implements Initializable,Serializable{
         @Override
         
         public void handle(ActionEvent event) {
-        	
+        	coinCounter.setText(Integer.toString(G1.coinsCollected));
         	
         	if (G1.hero.Node.getLayoutX() <= 250) {
         		if (true) {
@@ -1262,7 +1277,7 @@ public class GameController implements Initializable,Serializable{
         				anchorPane.getChildren().removeAll(G1.Coins.get(i).Node);
         				G1.Coins.remove(i);
         				G1.coinsCollected += 1;
-            			coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+1));
+            			coinCounter.setText(Integer.toString(G1.coinsCollected));
         				
         			}
         		}
@@ -1308,6 +1323,8 @@ public class GameController implements Initializable,Serializable{
 	                				G1.Orcs.get(i).play_Die_Fall();
 	                			}
 	                			G1.Orcs.remove(i);
+	                			G1.coinsCollected += 5;
+	                			coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+5));
 	
 	                		}
                 		}
@@ -1327,6 +1344,8 @@ public class GameController implements Initializable,Serializable{
 	                				G1.Orcs.get(i).play_Die_Fall();
 	                			}
 	                			G1.Orcs.remove(i);
+	                			G1.coinsCollected += 5;
+	                			coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+5));
                 			}
                 		}
                 	}
