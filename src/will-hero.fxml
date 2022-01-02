@@ -152,5 +152,15 @@
             </Label>
          </children>
       </AnchorPane>
+      <AnchorPane fx:id="Victory" disable="true" layoutX="268.0" layoutY="123.0" prefHeight="239.0" prefWidth="414.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1fa1e9" height="239.0" stroke="BLACK" strokeType="INSIDE" width="431.0" />
+            <Label layoutX="156.0" layoutY="102.0" text="YOU WON!" textFill="#12e4ef">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

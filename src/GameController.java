@@ -1030,6 +1030,9 @@ public class GameController implements Initializable,Serializable{
 	@FXML
 	private Label No_coin;
 
+	@FXML
+	private AnchorPane Victory;
+
 ////////////////HELMET CHANGING NODES////////////////////////////
     @FXML
     private ImageView h1;
@@ -1143,6 +1146,8 @@ public class GameController implements Initializable,Serializable{
         	if (G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING && 
         			G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
     			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
+					Victory.setDisable(false);
+					Victory.setVisible(true);
     				G1.pauseGame();
     			}
         		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 1);
@@ -1241,6 +1246,8 @@ public class GameController implements Initializable,Serializable{
         	coinCounter.setText(Integer.toString(G1.coinsCollected));
         	if ( G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
     			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
+					Victory.setDisable(false);
+					Victory.setVisible(true);
     				G1.pauseGame();
     			}
 	        	G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() - 1);
@@ -1413,6 +1420,8 @@ public class GameController implements Initializable,Serializable{
         	if (G1.hero.Node.getLayoutX() <= 250) {
         		if (true) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Fline.Node.getBoundsInParent())) {
+						Victory.setDisable(false);
+						Victory.setVisible(true);
         				G1.pauseGame();
         			}
         			G1.hero.Node.setLayoutX(G1.hero.Node.getLayoutX() + 1);
@@ -2223,8 +2232,6 @@ public class GameController implements Initializable,Serializable{
                 orc.up_Timeline.pause();
                 orc.right_Timeline.pause();
                 
-                anchorPane.getChildren().addAll(orc.Node);
-                
                 orc.die_Rotate = new RotateTransition();
                 orc.die_Rotate.setNode(orc.Node);
                 orc.die_Rotate.setDuration(Duration.millis(1000));
@@ -2240,16 +2247,17 @@ public class GameController implements Initializable,Serializable{
                 orc.die_Fall.setCycleCount(1);
 //                G1.Orcs.get(i).die_Fall.setInterpolator(Interpolator.LINEAR);
                 orc.die_Fall.setToY(1000);
-                
-                
-                
-                
-                
-                
-                
-               
-                
+
+
+
+
+
+
+
+
+
                 G1.Orcs.add(orc);
+				anchorPane.getChildren().addAll(G1.Orcs.get(G1.Orcs.size() -1).Node);
 				//anchorPane.getChildren().addAll(G1.Orcs.get(G1.Orcs.size() -1).Node);
                 
             }
@@ -2339,11 +2347,11 @@ public class GameController implements Initializable,Serializable{
 
 		G1.hero.revived = GD.Rev;
 
-//		for (int i = 0; i< G1.Orcs.size(); i++){
-//			if (G1.Orcs.get(i).down_Timeline.getStatus() != Animation.Status.RUNNING){
-//				G1.Orcs.get(i).down_Timeline.play();
-//			}
-//		}
+		for (int i = 0; i< G1.Orcs.size(); i++){
+			if (G1.Orcs.get(i).down_Timeline.getStatus() != Animation.Status.RUNNING){
+				G1.Orcs.get(i).down_Timeline.play();
+			}
+		}
 
 
 
