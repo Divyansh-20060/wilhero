@@ -2001,71 +2001,87 @@ public class GameController implements Initializable,Serializable{
 
         if(GD.Orc_P.size() > G1.Orcs.size()){
             while(GD.Orc_P.size() > G1.Orcs.size()){
-                Orc orc = new Orc(0,0);
+                Orc orc = new Orc(900,10);
 
                 Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                    	if (orc.up_Timeline.getStatus() != Animation.Status.RUNNING &&
+                    	if (orc.up_Timeline.getStatus() != Animation.Status.RUNNING && 
                     			orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
-
+                    		
                     		orc.Node.setLayoutY(orc.Node.getLayoutY() + 1);
-
+                    		if (orc.Node.getLayoutY() > 460 && orc.dead != true) {
+                    			orc.dead = true;
+    	                		if (orc.die_Fall.getStatus() != Animation.Status.RUNNING ) {
+    	                			orc.die_Fall.play();
+    	                			G1.coinsCollected += 5;
+    	                			
+    	                			
+    	                		}
+    	                		if (orc.die_Rotate.getStatus() != Animation.Status.RUNNING ) {
+    	                			orc.die_Rotate.play();
+    	                		}
+                    		}
+                    		
                     		 if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
                     				(G1.hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
                     				  )  {
-
+                    			
                     			//hero hits the side of orc
-
-
+                    			
+                    			
                     			orc.right_Timeline.setCycleCount(120);
                     			orc.right_Timeline.play();
                     			G1.hero.right_Timeline.stop();
                     			G1.hero.down_Timeline.play();
                     		}
-
-
-                    		else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
-                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) &&
+                    		
+                    		
+                    		else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
                     				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
-                    				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
+                    				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                     				) {
-
+                    			
                     			//hero hits the top of orc
-                    			G1.hero.up_Timeline.setCycleCount(56);
-
+                    	    	G1.hero.up_Timeline.setCycleCount(56);
+                    	    	
                     	    	if(G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
                     	    		G1.hero.up_Timeline.play();
                     	    	}
-
-
+                    	    	
+                    	        
                     	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
-
-
+                    	    	
+                    	    	
                     		}
+                    		
 
-
-                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
-                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) &&
+                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
                     				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
-                    				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
+                    				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                     				) {
-                    			orc.down_Timeline.stop();
-                    			G1.pauseGame();
-
+                    			if(!G1.hero.dead) {
+                    				G1.hero.dead = true;
+                    				
+                    			}
+                    			orc.down_Timeline.pause();
+                    			G1.pauseGame(); 
+                    			
                     		}
-
+                    		
 
                     	}
                         for (int i = 0;i < G1.Islands.size(); i++){
                             if(orc.Node.getBoundsInParent().intersects(G1.Islands.get(i).Node.getBoundsInParent())){
                             orc.down_Timeline.stop();
-
+                            
 
                             orc.up_Timeline.setCycleCount(160);
                             orc.up_Timeline.play();
@@ -2076,37 +2092,37 @@ public class GameController implements Initializable,Serializable{
                     }
                 }
                 ));
-
+                
                 Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                     	if ( orc.right_Timeline.getStatus() != Animation.Status.RUNNING) {
-
+                    		
                         	orc.Node.setLayoutY(orc.Node.getLayoutY() - 1);
-
+                        	
                     		if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
                     				(G1.hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
-
+                    				  
                     				    )  {
-
+                    			
                     			//hero hits the side of orc
                     			G1.hero.right_Timeline.stop();
                     			G1.hero.down_Timeline.play();
-
+                    			
                     			orc.right_Timeline.setCycleCount(120);
                     			orc.right_Timeline.play();
                     		}
 
-                        	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
-                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) &&
+                        	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+                    				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
                     				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                     				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                     				 ) {
-
+                    			
                     			//hero hits the top of orc
                         		G1.hero.up_Timeline.setCycleCount(90);
                     	    	if(G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
@@ -2114,79 +2130,85 @@ public class GameController implements Initializable,Serializable{
                         	    }
                     	    	orc.up_Timeline.stop();
                     	    	orc.down_Timeline.play();
-                    	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
+                    	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());	
                     		}
 
-                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
-                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) &&
+                    		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+                    				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
                     				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                     				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                     				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                     				) {
-                    			orc.up_Timeline.stop();
+                    			if(!G1.hero.dead) {
+                    				G1.hero.dead = true;
+                    			}
+                    			orc.up_Timeline.pause();
                     			G1.pauseGame();
-
+                    			
                     		}
 
-
+                    		
                         }
                     }
                 }
                 ));
-
+                
                 Timeline right_Timeline = new Timeline(new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-
-
+                    	
+                    	
                     	orc.Node.setLayoutX(orc.Node.getLayoutX() + 1.5);
-
+                    	
 //                    	orc.right_Timeline.setOnFinished(t -> orc.down_Timeline.play());
                     	if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() < orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() >= orc.Node.getBoundsInParent().getMinX()) &&
                 				(G1.hero.Node.getBoundsInParent().getMinX() <= orc.Node.getBoundsInParent().getMinX() )
-
+                				  
                 				    )  {
-
+                			
                 			//hero hits the side of orc
                     		G1.hero.right_Timeline.stop();
                     		G1.hero.down_Timeline.play();
-
+                			
                 			orc.right_Timeline.setCycleCount(120);
                 			orc.right_Timeline.play();
                 		}
 
-                    	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
-                				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) &&
+                    	else if(G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+                				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMinY() ) && 
                 				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMinY()) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= G1.hero.Node.getBoundsInParent().getMaxY() - orc.Node.getBoundsInParent().getMinY())
                 				 ) {
-
+                			
                 			//hero hits the top of orc
-                	    	G1.hero.up_Timeline.setCycleCount(90);
+                    		G1.hero.up_Timeline.setCycleCount(90);
                 	    	if(G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING) {
                 	    		G1.hero.up_Timeline.play();
                     	    }
                 	    	orc.up_Timeline.stop();
                 	    	orc.down_Timeline.play();
-                	    	G1.hero.up_Timeline.setOnFinished(e -> G1.hero.down_Timeline.play());
+                	    	G1.hero.up_Timeline.setOnFinished(e -> hero.down_Timeline.play());	
                 		}
 
-                		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) &&
-                				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) &&
+                		else if (G1.hero.Node.getBoundsInParent().intersects(orc.Node.getBoundsInParent()) && 
+                				(G1.hero.Node.getBoundsInParent().getMinY() <= orc.Node.getBoundsInParent().getMaxY() ) && 
                 				(G1.hero.Node.getBoundsInParent().getMaxY() >= orc.Node.getBoundsInParent().getMaxY() ) &&
                 				(G1.hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - G1.hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - G1.hero.Node.getBoundsInParent().getMinY())
                 				) {
-                			orc.right_Timeline.stop();
+                			if(!G1.hero.dead) {
+                				G1.hero.dead = true;
+                			}
+                			orc.right_Timeline.pause();
                 			G1.pauseGame();
-
+                			
                 		}
 
-
+                    	
                     }
                 }
                 ));
@@ -2218,6 +2240,13 @@ public class GameController implements Initializable,Serializable{
                 orc.die_Fall.setCycleCount(1);
 //                G1.Orcs.get(i).die_Fall.setInterpolator(Interpolator.LINEAR);
                 orc.die_Fall.setToY(1000);
+                
+                
+                
+                
+                
+                
+                
                
                 
                 G1.Orcs.add(orc);
