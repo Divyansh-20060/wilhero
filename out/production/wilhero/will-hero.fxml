@@ -19,7 +19,7 @@
             <Image url="@images/WMV.gif" />
          </image>
       </ImageView>
-      <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#onHelmetBClick" text="Helmets" />
+      <Button fx:id="Helmets" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#onHelmetBClick" text="Helmets" />
       <Button fx:id="dash" layoutX="384.0" layoutY="465.0" mnemonicParsing="false" onAction="#onDashButtonClick" prefHeight="51.0" prefWidth="98.0" text="dash">
          <font>
             <Font size="26.0" />
@@ -40,7 +40,7 @@
          </children>
       </VBox>
       <Button fx:id="save" layoutX="23.0" layoutY="2.0" mnemonicParsing="false" onAction="#onSaveB" text="save" />
-      <Button layoutX="86.0" layoutY="2.0" mnemonicParsing="false" onAction="#onLoadB" text="load" />
+      <Button fx:id="load" layoutX="86.0" layoutY="2.0" mnemonicParsing="false" onAction="#onLoadB" text="load" />
       <Text fx:id="WILLHERO" fill="WHITE" layoutX="292.0" layoutY="91.0" stroke="WHITE" strokeDashOffset="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" WILL HERO" textAlignment="CENTER" wrappingWidth="283.20006103515624">
          <font>
             <Font name="Ubuntu Bold" size="96.0" />
@@ -109,7 +109,42 @@
             <Font name="Candara Light" size="58.0" />
          </font>
       </Label>
-      <Button layoutX="17.0" layoutY="110.0" mnemonicParsing="false" onAction="#onPauseClick" text="Pause" />
-      <Button layoutX="78.0" layoutY="110.0" mnemonicParsing="false" onAction="#onResumeClick" text="Resume" />
+      <Button fx:id="pause" layoutX="17.0" layoutY="110.0" mnemonicParsing="false" onAction="#onPauseClick" text="Pause" />
+      <Button fx:id="resume" layoutX="78.0" layoutY="110.0" mnemonicParsing="false" onAction="#onResumeClick" text="Resume" />
+      <AnchorPane fx:id="Revive" disable="true" layoutX="156.0" layoutY="76.0" prefHeight="387.0" prefWidth="647.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#403fa1f7" height="387.0" stroke="BLACK" strokeType="INSIDE" width="656.0" />
+            <Label layoutX="174.0" layoutY="23.0" text="GAME OVER" textFill="#d3e10f">
+               <font>
+                  <Font name="Times New Roman" size="52.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="441.0" layoutY="108.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Coin.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="111.0" layoutY="94.0" text="Continue for       ?" textFill="#d3e10f">
+               <font>
+                  <Font name="Times New Roman" size="45.0" />
+               </font>
+            </Label>
+            <Label layoutX="397.0" layoutY="106.0" text="15" textFill="WHITE">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Label>
+            <Button fx:id="Rev_yes" layoutX="129.0" layoutY="253.0" mnemonicParsing="false" onAction="#onReviveYes" prefHeight="59.0" prefWidth="114.0" text="YES">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="Rev_no" layoutX="388.0" layoutY="253.0" mnemonicParsing="false" onAction="#onQuitButtonClick" prefHeight="59.0" prefWidth="122.0" text="QUIT">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

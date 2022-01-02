@@ -191,9 +191,12 @@ class Chest extends gameobjcts{
 }
 
 class Hero extends gameobjcts{
+	
+	boolean dead;
 	Hammer hammer;
 	Shuriken shuriken;
 	
+	Timeline evergreen_Timeline;
 	Timeline up_Timeline;
 	Timeline down_Timeline;
 	Timeline right_Timeline;
@@ -448,6 +451,10 @@ class Game implements Serializable{
                 				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
                 				) {
+                			if(!hero.dead) {
+                				hero.dead = true;
+                				
+                			}
                 			orc.down_Timeline.stop();
                 			pauseGame(); 
                 			
@@ -516,6 +523,9 @@ class Game implements Serializable{
                 				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
                 				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
                 				) {
+                			if(!hero.dead) {
+                				hero.dead = true;
+                			}
                 			orc.up_Timeline.stop();
                 			pauseGame();
                 			
@@ -574,6 +584,9 @@ class Game implements Serializable{
             				(hero.Node.getBoundsInParent().getMaxX() - orc.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
             				(orc.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= orc.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
             				) {
+            			if(!hero.dead) {
+            				hero.dead = true;
+            			}
             			orc.right_Timeline.stop();
             			pauseGame();
             			
@@ -678,6 +691,9 @@ class Game implements Serializable{
             				(hero.Node.getBoundsInParent().getMaxX() - boss.Node.getBoundsInParent().getMinX() >= boss.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
             				(boss.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= boss.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
             				) {
+            			if(!hero.dead) {
+            				hero.dead = true;
+            			}
             			boss.down_Timeline.stop();
             			pauseGame(); 
             			
@@ -755,6 +771,9 @@ class Game implements Serializable{
             				(hero.Node.getBoundsInParent().getMaxX() - boss.Node.getBoundsInParent().getMinX() >= boss.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
             				(boss.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= boss.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
             				) {
+            			if(!hero.dead) {
+            				hero.dead = true;
+            			}
             			boss.up_Timeline.stop();
             			pauseGame();
             			
@@ -811,6 +830,9 @@ class Game implements Serializable{
         				(hero.Node.getBoundsInParent().getMaxX() - boss.Node.getBoundsInParent().getMinX() >= boss.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY()) &&
         				(boss.Node.getBoundsInParent().getMaxX() - hero.Node.getBoundsInParent().getMinX() >= boss.Node.getBoundsInParent().getMaxY() - hero.Node.getBoundsInParent().getMinY())
         				) {
+        			if(!hero.dead) {
+        				hero.dead = true;
+        			}
         			boss.right_Timeline.stop();
         			pauseGame();
         			
@@ -871,6 +893,19 @@ class Game implements Serializable{
 }
 
 public class GameController implements Initializable,Serializable{
+	
+	@FXML 
+	private Button load;
+	
+	@FXML 
+	private Button Helmets;
+	
+	@FXML 
+	private Button resume;
+	
+	@FXML 
+	private Button pause;
+	
 
     @FXML
     private Label Score;
@@ -986,6 +1021,15 @@ public class GameController implements Initializable,Serializable{
         
         @Override
         public void handle(ActionEvent event) {
+//        	if (G1.hero.dead) {
+//        		setBackTranslucent();
+//        		
+//        		
+//        		Revive.setDisable(false);
+//        		
+//        		Revive.setVisible(true);
+//        		
+//        	}
         	coinCounter.setText(Integer.toString(G1.coinsCollected));
         	if (G1.hero.up_Timeline.getStatus() != Animation.Status.RUNNING && 
         			G1.hero.right_Timeline.getStatus() != Animation.Status.RUNNING) {
@@ -995,6 +1039,10 @@ public class GameController implements Initializable,Serializable{
         		G1.hero.Node.setLayoutY(G1.hero.Node.getLayoutY() + 1);
         		G1.hero.hammer.Node.setLayoutY(G1.hero.hammer.Node.getLayoutY() + 1 );
         		G1.hero.shuriken.Node.setLayoutY(G1.hero.shuriken.Node.getLayoutY() + 1 );
+    			if(!G1.hero.dead && G1.hero.Node.getLayoutY() > 470) {
+    				G1.hero.dead = true;
+    				System.out.println("hero fell into abyss");
+    			}
         		
         		for (int i = 0; i < G1.Coins.size(); i++) {
         			if (G1.hero.Node.getBoundsInParent().intersects(G1.Coins.get(i).Node.getBoundsInParent())) {
@@ -1264,6 +1312,20 @@ public class GameController implements Initializable,Serializable{
         }
     }));
     
+    Timeline evergreen = new Timeline(new KeyFrame(Duration.millis(2.6), new EventHandler<ActionEvent>() {
+        
+        @Override
+        public void handle(ActionEvent event) {
+        	if (G1.hero.dead) {
+        		
+        		setBackTranslucent();
+        		Revive.setDisable(false);
+        		Revive.setVisible(true);
+        		
+        	}
+        }
+    }));
+    
    
     Timeline Dash = new Timeline(new KeyFrame(Duration.millis(0.6), new EventHandler<ActionEvent>() {
         
@@ -1333,7 +1395,7 @@ public class GameController implements Initializable,Serializable{
 	                			}
 	                			G1.Orcs.remove(i);
 	                			G1.coinsCollected += 5;
-	                			coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+5));
+	                			coinCounter.setText(Integer.toString(G1.coinsCollected));
 	
 	                		}
                 		}
@@ -1354,7 +1416,7 @@ public class GameController implements Initializable,Serializable{
 	                			}
 	                			G1.Orcs.remove(i);
 	                			G1.coinsCollected += 5;
-	                			coinCounter.setText(Integer.toString(Integer.parseInt(coinCounter.getText())+5));
+	                			coinCounter.setText(Integer.toString(G1.coinsCollected));
                 			}
                 		}
                 	}
@@ -1457,6 +1519,83 @@ public class GameController implements Initializable,Serializable{
 
     }
     
+    public void setBackTranslucent() {
+    	double x = 0.1;
+    	BG.setOpacity(x);
+    	G1.hero.Node.setOpacity(x);
+    	G1.boss.Node.setOpacity(x);
+    	G1.Fline.Node.setOpacity(x);
+    	save.setOpacity(x);
+    	load.setOpacity(x);
+    	Helmets.setOpacity(x);
+    	resume.setOpacity(x);
+    	pause.setOpacity(x);
+    	dash.setOpacity(x);
+    	Stop.setOpacity(x);
+    	Start.setOpacity(x);
+    	
+    	if(G1.hero.hammer.Node.getOpacity() != 0) {
+    		G1.hero.hammer.Node.setOpacity(x);
+    	}
+    	if(G1.hero.shuriken.Node.getOpacity() != 0) {
+    		G1.hero.shuriken.Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Islands.size(); i++ ) {
+    		G1.Islands.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Orcs.size(); i++) {
+    		G1.Orcs.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.FS_L.size(); i++) {
+    		G1.FS_L.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Coins.size(); i++) {
+    		G1.Coins.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Chests.size(); i++) {
+    		G1.Chests.get(i).Node.setOpacity(x);
+    	}
+    }
+    public void setBackOpaque() {
+    	double x = 1;
+    	BG.setOpacity(x);
+    	G1.hero.Node.setOpacity(x);
+    	G1.boss.Node.setOpacity(x);
+    	G1.Fline.Node.setOpacity(x);
+    	save.setOpacity(x);
+    	load.setOpacity(x);
+    	Helmets.setOpacity(x);
+    	resume.setOpacity(x);
+    	pause.setOpacity(x);
+    	dash.setOpacity(x);
+    	Stop.setOpacity(x);
+    	Start.setOpacity(x);
+    	
+    	if(G1.hero.hammer.Node.getOpacity() == 0.1) {
+    		G1.hero.hammer.Node.setOpacity(x);
+    	}
+    	if(G1.hero.shuriken.Node.getOpacity() == 0.1) {
+    		G1.hero.shuriken.Node.setOpacity(x);
+    	}
+    	
+    	for(int i = 0; i < G1.Islands.size(); i++ ) {
+    		G1.Islands.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Orcs.size(); i++) {
+    		G1.Orcs.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.FS_L.size(); i++) {
+    		G1.FS_L.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Coins.size(); i++) {
+    		G1.Coins.get(i).Node.setOpacity(x);
+    	}
+    	for(int i = 0; i < G1.Chests.size(); i++) {
+    		G1.Chests.get(i).Node.setOpacity(x);
+    	}
+    }
+    
+    
     public void jump(Node pp){
 //	ScaleTransition scale = new ScaleTransition();
 //    	scale.setNode(pp);
@@ -1495,7 +1634,22 @@ public class GameController implements Initializable,Serializable{
         G1.resumeGame();
 
     }
-
+    public void onReviveYes() {
+    	
+    	if (G1.hero.dead) {
+    		G1.hero.dead = false;
+    		G1.coinsCollected -= 15;
+    		G1.hero.Node.setLayoutY(10);
+    		G1.hero.hammer.Node.setLayoutY(-10);
+    		G1.hero.shuriken.Node.setLayoutY(-28);
+    		setBackOpaque();
+    		Revive.setDisable(true);
+    		Revive.setVisible(false);
+    		G1.resumeGame();
+    		
+    	}
+    }
+    
     public void onStartButtonClick() {
     	if(!hasStarted) {
 
@@ -1602,11 +1756,14 @@ public class GameController implements Initializable,Serializable{
         	G1.Orcs.get(i).down_Timeline.setCycleCount(Animation.INDEFINITE);
         	G1.Orcs.get(i).down_Timeline.play();
         }
+        G1.hero.evergreen_Timeline = evergreen; 
         G1.hero.setDown_Timeline(T1);
         G1.hero.setLeft_Timeline(DashBack);
         G1.hero.setRight_Timeline(Dash);
         G1.hero.setUp_Timeline(jump);
+        G1.hero.evergreen_Timeline.setCycleCount(Animation.INDEFINITE);
         G1.hero.down_Timeline.setCycleCount(Animation.INDEFINITE);
+        G1.hero.evergreen_Timeline.play();
         G1.hero.down_Timeline.play();
 //        T1.setCycleCount(Animation.INDEFINITE);
 //        T1.play();
