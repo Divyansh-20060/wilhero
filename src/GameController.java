@@ -191,7 +191,7 @@ class Chest extends gameobjcts{
 }
 
 class Hero extends gameobjcts{
-	
+	boolean revived;
 	boolean dead;
 	Hammer hammer;
 	Shuriken shuriken;
@@ -312,6 +312,16 @@ class Game implements Serializable{
     public void pauseGame() {
     	this.isPaused = true;
     	
+    	if(boss.up_Timeline != null) {
+    		boss.up_Timeline.pause();
+    	}
+    	if(boss.down_Timeline != null) {
+    		boss.down_Timeline.pause();
+    	}
+    	
+    	if(boss.right_Timeline != null) {
+    		boss.right_Timeline.pause();
+    	}
     	
     	if (hero.up_Timeline != null) {
     		hero.up_Timeline.pause();
@@ -325,6 +335,11 @@ class Game implements Serializable{
     	if(hero.left_Timeline != null) {
     		hero.left_Timeline.pause();
     	}
+    	
+    	for (int i = 0; i< FS_L.size(); i++) {
+    		FS_L.get(i).fall.pause(); 
+    	}
+    	
     	for (int i = 0; i < Orcs.size(); i++) {
     		if(Orcs.get(i).down_Timeline != null) {
     			Orcs.get(i).down_Timeline.pause();
@@ -340,7 +355,24 @@ class Game implements Serializable{
     
     public void resumeGame() {
     	this.isPaused = false;
+    	if (boss.up_Timeline != null && boss.up_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		boss.up_Timeline.play();
+    	}
     	
+    	if (boss.down_Timeline != null && boss.down_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		boss.down_Timeline.play();
+    	}
+    	
+    	if (boss.right_Timeline != null && boss.right_Timeline.getStatus() == Animation.Status.PAUSED) {
+    		boss.right_Timeline.play();
+    	}
+    	
+    	for (int i = 0; i< FS_L.size(); i++) {
+    		if (FS_L.get(i).fall.getStatus() == Animation.Status.PAUSED) {
+    			FS_L.get(i).fall.play();
+    		}
+    	}
+ 
     	if (hero.up_Timeline != null &&  hero.up_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.up_Timeline.play();
     	}
@@ -353,6 +385,9 @@ class Game implements Serializable{
     	if (hero.left_Timeline != null &&  hero.left_Timeline.getStatus() == Animation.Status.PAUSED) {
     		hero.left_Timeline.play();
     	}
+    	
+    	
+    	
     	for (int i = 0; i < Orcs.size(); i++) {
     		if (Orcs.get(i).down_Timeline != null && Orcs.get(i).down_Timeline.getStatus() == Animation.Status.PAUSED) {
     			Orcs.get(i).down_Timeline.play();
@@ -455,7 +490,7 @@ class Game implements Serializable{
                 				hero.dead = true;
                 				
                 			}
-                			orc.down_Timeline.stop();
+                			orc.down_Timeline.pause();
                 			pauseGame(); 
                 			
                 		}
@@ -526,7 +561,7 @@ class Game implements Serializable{
                 			if(!hero.dead) {
                 				hero.dead = true;
                 			}
-                			orc.up_Timeline.stop();
+                			orc.up_Timeline.pause();
                 			pauseGame();
                 			
                 		}
@@ -587,7 +622,7 @@ class Game implements Serializable{
             			if(!hero.dead) {
             				hero.dead = true;
             			}
-            			orc.right_Timeline.stop();
+            			orc.right_Timeline.pause();
             			pauseGame();
             			
             		}
@@ -694,7 +729,7 @@ class Game implements Serializable{
             			if(!hero.dead) {
             				hero.dead = true;
             			}
-            			boss.down_Timeline.stop();
+            			boss.down_Timeline.pause();
             			pauseGame(); 
             			
             		}
@@ -774,7 +809,7 @@ class Game implements Serializable{
             			if(!hero.dead) {
             				hero.dead = true;
             			}
-            			boss.up_Timeline.stop();
+            			boss.up_Timeline.pause();
             			pauseGame();
             			
             		}
@@ -833,7 +868,7 @@ class Game implements Serializable{
         			if(!hero.dead) {
         				hero.dead = true;
         			}
-        			boss.right_Timeline.stop();
+        			boss.right_Timeline.pause();
         			pauseGame();
         			
         		}
@@ -1324,6 +1359,9 @@ public class GameController implements Initializable,Serializable{
         		setBackTranslucent();
         		Revive.setDisable(false);
         		Revive.setVisible(true);
+        		if (G1.hero.revived ) {
+        			Rev_yes.setDisable(true);
+        		}
         		
         	}
         }
@@ -1525,17 +1563,40 @@ public class GameController implements Initializable,Serializable{
     public void setBackTranslucent() {
     	double x = 0.1;
     	BG.setOpacity(x);
+    	BG.setDisable(true);
+    	
     	G1.hero.Node.setOpacity(x);
+    	G1.hero.Node.setDisable(true);
+    	
     	G1.boss.Node.setOpacity(x);
+    	G1.boss.Node.setDisable(true);
+    	
     	G1.Fline.Node.setOpacity(x);
+    	G1.Fline.Node.setDisable(true);
+    	
     	save.setOpacity(x);
+    	save.setDisable(true);
+    	
     	load.setOpacity(x);
+    	load.setDisable(true);
+    	
     	Helmets.setOpacity(x);
+    	Helmets.setDisable(true);
+    	
     	resume.setOpacity(x);
+    	resume.setDisable(true);
+    	
     	pause.setOpacity(x);
+    	pause.setDisable(true);
+    	
     	dash.setOpacity(x);
+    	dash.setDisable(true);
+    	
     	Stop.setOpacity(x);
+    	Stop.setDisable(true);
+    	
     	Start.setOpacity(x);
+    	Start.setDisable(true);
     	
     	if(G1.hero.hammer.Node.getOpacity() != 0) {
     		G1.hero.hammer.Node.setOpacity(x);
@@ -1545,34 +1606,62 @@ public class GameController implements Initializable,Serializable{
     	}
     	for(int i = 0; i < G1.Islands.size(); i++ ) {
     		G1.Islands.get(i).Node.setOpacity(x);
+    		G1.Islands.get(i).Node.setDisable(true);
     	}
     	for(int i = 0; i < G1.Orcs.size(); i++) {
     		G1.Orcs.get(i).Node.setOpacity(x);
+    		G1.Orcs.get(i).Node.setDisable(true);
     	}
     	for(int i = 0; i < G1.FS_L.size(); i++) {
     		G1.FS_L.get(i).Node.setOpacity(x);
+    		G1.FS_L.get(i).Node.setDisable(true);
     	}
     	for(int i = 0; i < G1.Coins.size(); i++) {
     		G1.Coins.get(i).Node.setOpacity(x);
+    		G1.Coins.get(i).Node.setDisable(true);
     	}
     	for(int i = 0; i < G1.Chests.size(); i++) {
     		G1.Chests.get(i).Node.setOpacity(x);
+    		G1.Chests.get(i).Node.setDisable(true);
     	}
     }
     public void setBackOpaque() {
     	double x = 1;
     	BG.setOpacity(x);
+    	BG.setDisable(false);
+    	
     	G1.hero.Node.setOpacity(x);
+    	G1.hero.Node.setDisable(false);
+    	
     	G1.boss.Node.setOpacity(x);
+    	G1.boss.Node.setDisable(false);
+    	
     	G1.Fline.Node.setOpacity(x);
+    	G1.Fline.Node.setDisable(false);
+    	
     	save.setOpacity(x);
+    	save.setDisable(false);
+    	
     	load.setOpacity(x);
+    	load.setDisable(false);
+    	
     	Helmets.setOpacity(x);
+    	Helmets.setDisable(false);
+    	
     	resume.setOpacity(x);
+    	resume.setDisable(false);
+    	
     	pause.setOpacity(x);
+    	pause.setDisable(false);
+    	
     	dash.setOpacity(x);
+    	dash.setDisable(false);
+    	
     	Stop.setOpacity(x);
+    	Stop.setDisable(false);
+    	
     	Start.setOpacity(x);
+    	Start.setDisable(false);
     	
     	if(G1.hero.hammer.Node.getOpacity() == 0.1) {
     		G1.hero.hammer.Node.setOpacity(x);
@@ -1583,18 +1672,23 @@ public class GameController implements Initializable,Serializable{
     	
     	for(int i = 0; i < G1.Islands.size(); i++ ) {
     		G1.Islands.get(i).Node.setOpacity(x);
+    		G1.Islands.get(i).Node.setDisable(false);
     	}
     	for(int i = 0; i < G1.Orcs.size(); i++) {
     		G1.Orcs.get(i).Node.setOpacity(x);
+    		G1.Orcs.get(i).Node.setDisable(false);
     	}
     	for(int i = 0; i < G1.FS_L.size(); i++) {
     		G1.FS_L.get(i).Node.setOpacity(x);
+    		G1.FS_L.get(i).Node.setDisable(false);
     	}
     	for(int i = 0; i < G1.Coins.size(); i++) {
     		G1.Coins.get(i).Node.setOpacity(x);
+    		G1.Coins.get(i).Node.setDisable(false);
     	}
     	for(int i = 0; i < G1.Chests.size(); i++) {
     		G1.Chests.get(i).Node.setOpacity(x);
+    		G1.Chests.get(i).Node.setDisable(false);
     	}
     }
     
@@ -1640,15 +1734,24 @@ public class GameController implements Initializable,Serializable{
     public void onReviveYes() {
     	
     	if (G1.hero.dead) {
-    		G1.hero.dead = false;
-    		G1.coinsCollected -= 15;
-    		G1.hero.Node.setLayoutY(10);
-    		G1.hero.hammer.Node.setLayoutY(-10);
-    		G1.hero.shuriken.Node.setLayoutY(-28);
-    		setBackOpaque();
-    		Revive.setDisable(true);
-    		Revive.setVisible(false);
-    		G1.resumeGame();
+    		
+    		if(G1.coinsCollected >= 15) {
+    			G1.hero.revived = true;
+	    		G1.hero.dead = false;
+	    		G1.coinsCollected -= 15;
+	    		G1.hero.Node.setLayoutY(10);
+	    		G1.hero.hammer.Node.setLayoutY(-10);
+	    		G1.hero.shuriken.Node.setLayoutY(-28);
+	    		setBackOpaque();
+	    		Revive.setDisable(true);
+	    		Revive.setVisible(false);
+	    		G1.resumeGame();
+    		}
+    		else {
+    			//No_coin
+    			No_coin.setDisable(false);
+    			No_coin.setVisible(true);
+    		}
     		
     	}
     }

@@ -114,22 +114,22 @@
       <AnchorPane fx:id="Revive" disable="true" layoutX="156.0" layoutY="76.0" prefHeight="387.0" prefWidth="647.0" visible="false">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#403fa1f7" height="387.0" stroke="BLACK" strokeType="INSIDE" width="656.0" />
-            <Label layoutX="174.0" layoutY="23.0" text="GAME OVER" textFill="#d3e10f">
-               <font>
-                  <Font name="Times New Roman" size="52.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="441.0" layoutY="108.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Coin.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="111.0" layoutY="94.0" text="Continue for       ?" textFill="#d3e10f">
+            <Label layoutX="138.0" layoutY="101.0" text="Continue for       " textFill="#d3e10f">
                <font>
                   <Font name="Times New Roman" size="45.0" />
                </font>
             </Label>
-            <Label layoutX="397.0" layoutY="106.0" text="15" textFill="WHITE">
+            <Label layoutX="173.0" layoutY="15.0" text="GAME OVER" textFill="#d3e10f">
+               <font>
+                  <Font size="51.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="499.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Coin.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="434.0" layoutY="105.0" prefHeight="51.0" prefWidth="57.0" text="15" textFill="WHITE">
                <font>
                   <Font size="29.0" />
                </font>
@@ -144,6 +144,11 @@
                   <Font size="28.0" />
                </font>
             </Button>
+            <Label fx:id="No_coin" disable="true" layoutX="184.0" layoutY="161.0" text="Not enough coins!" textFill="#e01010" visible="false">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>
