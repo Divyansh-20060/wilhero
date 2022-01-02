@@ -747,13 +747,13 @@ class Game implements Serializable{
         Fline = new f_line(x ,y-60);
         boss = new Boss( FS_L.get(9).Node.getLayoutX() , y - 150);
         
-        Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(3.2), new EventHandler<ActionEvent>() {
+        Timeline down_Timeline = new Timeline(new KeyFrame(Duration.millis(4.5), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
             	if (boss.up_Timeline.getStatus() != Animation.Status.RUNNING && 
             			boss.right_Timeline.getStatus() != Animation.Status.RUNNING) {
             		
-            		boss.Node.setLayoutY(boss.Node.getLayoutY() + 1);
+            		boss.Node.setLayoutY(boss.Node.getLayoutY() + 2);
             		
             		 if(hero.Node.getBoundsInParent().intersects(boss.Node.getBoundsInParent()) &&
             				(hero.Node.getBoundsInParent().getMaxX() - boss.Node.getBoundsInParent().getMinX() < hero.Node.getBoundsInParent().getMaxY() - boss.Node.getBoundsInParent().getMinY()) &&
@@ -833,12 +833,12 @@ class Game implements Serializable{
         }
         ));
         
-        Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(3.2), new EventHandler<ActionEvent>() {
+        Timeline up_Timeline = new Timeline(new KeyFrame(Duration.millis(4.5), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
             	if ( boss.right_Timeline.getStatus() != Animation.Status.RUNNING) {
             		
-            		boss.Node.setLayoutY(boss.Node.getLayoutY() - 1);
+            		boss.Node.setLayoutY(boss.Node.getLayoutY() - 2);
                 	
             		if(hero.Node.getBoundsInParent().intersects(boss.Node.getBoundsInParent()) &&
             				(hero.Node.getBoundsInParent().getMaxX() - boss.Node.getBoundsInParent().getMinX() < hero.Node.getBoundsInParent().getMaxY() - boss.Node.getBoundsInParent().getMinY()) &&
